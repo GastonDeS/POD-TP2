@@ -16,7 +16,7 @@
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <slf4j.version>1.7.12</slf4j.version>
-      <hazelcast.version>3.6.5</hazelcast.version>
+      <hazelcast.version>3.8.6</hazelcast.version>
    </properties>
    <dependencyManagement>
       <dependencies>
@@ -42,6 +42,11 @@
       </dependencies>
    </dependencyManagement>
    <dependencies>
+      <dependency>
+         <groupId>com.hazelcast</groupId>
+         <artifactId>hazelcast-all</artifactId>
+         <version>${hazelcast.version}</version>
+      </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>

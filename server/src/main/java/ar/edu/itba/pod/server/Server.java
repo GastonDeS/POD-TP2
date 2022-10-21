@@ -6,8 +6,6 @@ import com.hazelcast.core.Hazelcast;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class Server {
@@ -28,8 +26,8 @@ public class Server {
         JoinConfig joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
 
         InterfacesConfig interfacesConfig = new InterfacesConfig()
-                .setInterfaces(List.of("127.0.0.*"))
-                .setEnabled(true);
+                .setInterfaces(List.of("192.168.*.*"))
+                .setEnabled(false);
 
         NetworkConfig networkConfig = new NetworkConfig()
                 .setInterfaces(interfacesConfig)
