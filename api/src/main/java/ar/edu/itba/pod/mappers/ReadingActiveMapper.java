@@ -11,6 +11,8 @@ import java.util.Optional;
 public class ReadingActiveMapper<K> implements Mapper<K, Reading, String, Long> {
     private static final long ONE = 1;
     private static final long ZERO = 0;
+
+    // TODO try to transform this into a Map or like a map
     public List<Sensor> activeSensors;
 
     public ReadingActiveMapper(List<Sensor> activeSensors) {
