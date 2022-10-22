@@ -33,18 +33,9 @@ public class Server {
                 .setInterfaces(interfacesConfig)
                 .setJoin(joinConfig);
 
-//        NetworkConfig networkConfig = config.getNetworkConfig();
-//        networkConfig.setPort(5701).setPortCount(20);
-//        networkConfig.setPortAutoIncrement(true);
-//        JoinConfig join = networkConfig.getJoin();
-//        join.getMulticastConfig().setEnabled(false);
-//        join.getTcpIpConfig()
-//                .addMember("machine1")
-//                .addMember("localhost")
-//                .addMember("192.*.*.*").setEnabled(true);
-
         config.setNetworkConfig(networkConfig);
 
+        // TODO: set management center
         // Management Center Config
 //        ManagementCenterConfig managementCenterConfig = new ManagementCenterConfig()
 //                .setUrl("http://localhost:32768/mancenter/")
