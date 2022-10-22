@@ -1,10 +1,14 @@
 package ar.edu.itba.pod.queries;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public interface Query {
+public interface Query<K, V> {
     void run() throws ExecutionException, InterruptedException, IOException;
-    void writeResult(String outPath) throws IOException;
-    String getResult();
+
+    void writeResult() throws IOException;
+
+    String getResult(List<Map.Entry<K, V>> results);
 }

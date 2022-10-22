@@ -20,8 +20,6 @@ public class ReadingActiveMapper<K> implements Mapper<K, Reading, String, Long> 
     @Override
     public void map(K k, Reading reading, Context<String, Long> context) {
         Optional<Sensor> sensor = activeSensors.stream().filter(s -> s.sensor_ID.equals(reading.sensor_ID)).findFirst();
-        if (sensor.isPresent()) {
-            context.emit(sensor.get().sensor_description, Long.valueOf(reading.hourly_Counts));
-        }
+        sensor.ifPresent(value -> context.emit(value.sensor_description, Long.valueOf(reading.hourly_Counts)));
     }
 }

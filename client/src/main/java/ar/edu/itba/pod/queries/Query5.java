@@ -6,46 +6,53 @@ import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.models.SensorStatus;
 import ar.edu.itba.pod.reducers.SumReducerFactory;
+import ar.edu.itba.pod.utils.Arguments;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
-import com.hazelcast.core.IList;
 import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobTracker;
-import com.hazelcast.mapreduce.KeyValueSource;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class Query5 extends QueryImpl {
+public class Query5 extends GenericQuery<String, Long> {
+    private final List<Sensor> activeSensors;
 
-    private List<Sensor> activeSensors;
-    private List<Map.Entry<String, Long>> result;
-    public Query5(List<Sensor> sensors, final HazelcastInstance hazelcastInstance) {
-        super(hazelcastInstance);
+    public Query5(
+            List<Sensor> sensors,
+            final HazelcastInstance hazelcastInstance,
+            final Arguments arguments
+    ) {
+        super(hazelcastInstance, arguments);
         activeSensors = filterActiveSensors(sensors);
-        System.out.println(sensors.size());
         System.out.println(activeSensors.size());
     }
 
-    @Override
-    public void run() throws ExecutionException, InterruptedException, IOException {
-        final JobTracker jobTracker = getJobTracker("q5");
+//    @Override
+//    public void run() throws ExecutionException, InterruptedException, IOException {
+//        final JobTracker jobTracker = getJobTracker("q5");
+//
+//        final IList<Reading> readingIList = hazelcastInstance.getList("readings");
+//        final KeyValueSource<String, Reading> source = KeyValueSource.fromList(readingIList);
+//        System.out.println("size "+ readingIList.size());
+//        final Job<String, Reading> job = jobTracker.newJob(source);
+//        final ICompletableFuture<List<Map.Entry<String, Long>>> future = job
+//                .mapper(new ReadingActiveMapper<>(activeSensors))
+//                .reducer(new SumReducerFactory<>())
+//                .submit(new GroupByMillionsCollator());
+//
+//        System.out.println(future.get().toString());//.forEach(k -> System.out.println(k ));
+//        result = future.get();
+//        System.out.println("finish map reduce");
+//    }
 
-        final IList<Reading> readingIList = hazelcastInstance.getList("readings");
-        final KeyValueSource<String, Reading> source = KeyValueSource.fromList(readingIList);
-        System.out.println("size "+ readingIList.size());
-        final Job<String, Reading> job = jobTracker.newJob(source);
-        final ICompletableFuture<List<Map.Entry<String, Long>>> future = job
+    @Override
+    protected ICompletableFuture<List<Map.Entry<String, Long>>> submit() {
+        final Job<String, Reading> job = getJobFromList("q5");
+        return job
                 .mapper(new ReadingActiveMapper<>(activeSensors))
                 .reducer(new SumReducerFactory<>())
                 .submit(new GroupByMillionsCollator());
-
-        System.out.println(future.get().toString());//.forEach(k -> System.out.println(k ));
-        result = future.get();
-        System.out.println("finish map reduce");
     }
 
     private List<Sensor> filterActiveSensors(List<Sensor> sensors) {
@@ -58,18 +65,8 @@ public class Query5 extends QueryImpl {
         return "Group;Sensor A;Sensor B\n";
     }
 
-
     @Override
-    protected String formatData(String key, Long value) {
-        return value+ ";" + key+"\n";
-    }
-
-    @Override
-    public String getResult() {
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getHeaders());
-        if (result != null)
-            result.forEach((e) -> stringBuilder.append(formatData(e.getKey(), e.getValue())));
-        return stringBuilder.toString();
+    protected String formatData(Map.Entry<String, Long> entry) {
+        return entry.getValue() + ";" + entry.getKey() +"\n";
     }
 }

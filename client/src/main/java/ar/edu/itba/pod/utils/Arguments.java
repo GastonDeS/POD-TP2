@@ -1,6 +1,6 @@
 package ar.edu.itba.pod.utils;
 
-import ar.edu.itba.pod.constants.Query;
+import ar.edu.itba.pod.constants.Queries;
 import ar.edu.itba.pod.exceptions.InvalidArgumentsException;
 
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Properties;
 
 public class Arguments {
-    private Query query;
+    private Queries query;
     private Collection<String> addresses;
     private String inPath;
     private String outPath;
@@ -39,12 +39,12 @@ public class Arguments {
             throw new InvalidArgumentsException("Error: invalid out path argument");
         }
 
-        this.query = Query.getFromId(Integer.parseInt(props.getProperty(QUERY_KEY)));
+        this.query = Queries.getFromId(Integer.parseInt(props.getProperty(QUERY_KEY)));
         this.addresses = Arrays.asList(props.getProperty(ADDRESSES_KEY).split(";"));
         this.inPath = props.getProperty(IN_PATH_KEY);
         this.outPath = props.getProperty(OUT_PATH_KEY);
 
-        if (query.equals(Query.QUERY_4)) {
+        if (query.equals(Queries.QUERY_4)) {
             parseQuery4(props);
         }
     }
@@ -65,7 +65,7 @@ public class Arguments {
         GETTERS
      */
 
-    public Query getQuery() {
+    public Queries getQuery() {
         return query;
     }
 
