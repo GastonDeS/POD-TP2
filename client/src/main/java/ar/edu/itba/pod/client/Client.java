@@ -43,22 +43,24 @@ public class Client {
         HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient(clientConfig);
 
         IList<Sensor> sensorIList = hazelcastInstance.getList("sensors");
-//        final CsvParser sensorsCsvParser = new SensorsCsvParser(sensorIList);
-//        Path sensorsPath = Paths.get("/Users/gastondeschant/Downloads/pod/sensors.csv");
-//        sensorsCsvParser.loadData(sensorsPath);
-//        System.out.println(sensorIList.size());
-//
-//        IList<Reading> sensorsTestList = hazelcastInstance.getList("sensors");
-//        System.out.println("total sensors: "+sensorsTestList.size());
-//
-//        IList<Reading> readingIList = hazelcastInstance.getList("readings");
-//        final CsvParser readingsCsvParser = new ReadingsCsvParser(readingIList);
-//        Path readingsPath = Paths.get("/Users/gastondeschant/Downloads/pod/readings.csv");
-//        readingsCsvParser.loadData(readingsPath);
-//        System.out.println(readingIList.size());
-//
-//        IList<Reading> readingsTestList = hazelcastInstance.getList("readings");
-//        System.out.println("total readings: "+readingsTestList.size());
+        if (false ) {
+            final CsvParser sensorsCsvParser = new SensorsCsvParser(sensorIList);
+            Path sensorsPath = Paths.get("/Users/gastondeschant/Downloads/pod/sensors.csv");
+            sensorsCsvParser.loadData(sensorsPath);
+            System.out.println(sensorIList.size());
+
+            IList<Reading> sensorsTestList = hazelcastInstance.getList("sensors");
+            System.out.println("total sensors: " + sensorsTestList.size());
+
+            IList<Reading> readingIList = hazelcastInstance.getList("readings");
+            final CsvParser readingsCsvParser = new ReadingsCsvParser(readingIList);
+            Path readingsPath = Paths.get("/Users/gastondeschant/Downloads/pod/readings.csv");
+            readingsCsvParser.loadData(readingsPath);
+            System.out.println(readingIList.size());
+
+            IList<Reading> readingsTestList = hazelcastInstance.getList("readings");
+            System.out.println("total readings: " + readingsTestList.size());
+        }
 
         //////////// QUERY 5 ////////////
 
@@ -69,8 +71,8 @@ public class Client {
         try {
             Query5 query5 = new Query5(sensorIList, hazelcastInstance);
             query5.run();
-//            query5.writeResult("/Users/gastondeschant/Downloads/pod/query5.csv");
-            System.out.println("result "+query5.getResult());
+            query5.writeResult("/Users/gastondeschant/Downloads/pod/query5.csv");
+//            System.out.println("result "+query5.getResult());
         } catch (Exception e) {
             e.printStackTrace();
         }

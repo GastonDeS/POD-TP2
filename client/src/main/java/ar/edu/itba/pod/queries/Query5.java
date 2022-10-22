@@ -10,7 +10,6 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IList;
 import com.hazelcast.mapreduce.Job;
-import com.hazelcast.mapreduce.JobCompletableFuture;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
 
@@ -22,8 +21,8 @@ import java.util.stream.Collectors;
 
 public class Query5 extends QueryImpl {
 
-    List<String> activeSensors;
-    private Map<String, Long> result;
+    private List<Sensor> activeSensors;
+    private List<Map.Entry<String, Long>> result;
     public Query5(List<Sensor> sensors, final HazelcastInstance hazelcastInstance) {
         super(hazelcastInstance);
         activeSensors = filterActiveSensors(sensors);
@@ -44,15 +43,14 @@ public class Query5 extends QueryImpl {
                 .reducer(new SumReducerFactory<>())
                 .submit(new GroupByMillionsCollator());
 
-
-//        result = future.get().stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        System.out.println("finish map reduce");
         System.out.println(future.get().toString());//.forEach(k -> System.out.println(k ));
+        result = future.get();
+        System.out.println("finish map reduce");
     }
 
-    private List<String> filterActiveSensors(List<Sensor> sensors) {
+    private List<Sensor> filterActiveSensors(List<Sensor> sensors) {
         return sensors.stream().filter(s -> s.status == SensorStatus.ACTIVE)
-                .map(s -> s.sensor_description).collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,7 +69,7 @@ public class Query5 extends QueryImpl {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getHeaders());
         if (result != null)
-            result.forEach((k,v) -> stringBuilder.append(formatData(k, v)));
+            result.forEach((e) -> stringBuilder.append(formatData(e.getKey(), e.getValue())));
         return stringBuilder.toString();
     }
 }

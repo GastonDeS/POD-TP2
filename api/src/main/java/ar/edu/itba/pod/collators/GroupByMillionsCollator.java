@@ -25,12 +25,9 @@ public class GroupByMillionsCollator<K extends Comparable, V extends Comparable>
         }).collect(Collectors.toList());
 
         List<Map.Entry<String, Long>> list1 = new ArrayList<>();
-
         for (int i = 1; i < list.size(); i++) {
             Map.Entry<K, Long> prev = list.get(i-1);
             Map.Entry<K,Long> actual = list.get(i);
-            System.out.println(prev.getValue() + " " + actual.getValue());
-            System.out.println(prev.getValue() >= MILLION);
             if (prev.getValue() / MILLION == prev.getValue() / MILLION &&
                     prev.getValue() >= MILLION) {
                 list1.add(new AbstractMap.SimpleEntry<>(prev.getKey().toString()+";"+actual.getKey().toString(), (prev.getValue()/MILLION)*MILLION));
