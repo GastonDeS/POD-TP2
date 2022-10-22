@@ -46,13 +46,13 @@ public class Client {
 
         /* Read sensors file */
         IList<Sensor> sensorIList = hazelcastInstance.getList("sensors");
-        //fillSensorsList(sensorIList, arguments.getInPath());
+        fillSensorsList(sensorIList, arguments.getInPath());
         IList<Sensor> sensorsTestList = hazelcastInstance.getList("sensors");
         logger.info("Total sensors: " + sensorsTestList.size());
 
         /* Read readings file */
         IList<Reading> readingIList = hazelcastInstance.getList("readings");
-        //fillReadingsList(readingIList, arguments.getInPath());
+        fillReadingsList(readingIList, arguments.getInPath());
         IList<Sensor> readingsTestList = hazelcastInstance.getList("readings");
         logger.info("Total readings: " + readingsTestList.size());
 
