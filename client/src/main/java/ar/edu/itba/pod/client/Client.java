@@ -4,6 +4,7 @@ import ar.edu.itba.pod.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.queries.GenericQuery;
+import ar.edu.itba.pod.queries.Query1;
 import ar.edu.itba.pod.queries.Query5;
 import ar.edu.itba.pod.utils.Arguments;
 import ar.edu.itba.pod.utils.CsvParser;
@@ -45,13 +46,13 @@ public class Client {
 
         /* Read sensors file */
         IList<Sensor> sensorIList = hazelcastInstance.getList("sensors");
-        fillSensorsList(sensorIList, arguments.getInPath());
+        //fillSensorsList(sensorIList, arguments.getInPath());
         IList<Sensor> sensorsTestList = hazelcastInstance.getList("sensors");
         logger.info("Total sensors: " + sensorsTestList.size());
 
         /* Read readings file */
         IList<Reading> readingIList = hazelcastInstance.getList("readings");
-        fillReadingsList(readingIList, arguments.getInPath());
+        //fillReadingsList(readingIList, arguments.getInPath());
         IList<Sensor> readingsTestList = hazelcastInstance.getList("readings");
         logger.info("Total readings: " + readingsTestList.size());
 
@@ -59,6 +60,8 @@ public class Client {
 
         switch (arguments.getQuery()) {
             case QUERY_1:
+                optionalQuery = Optional.of(new Query1(sensorIList, hazelcastInstance, arguments));
+                break;
             case QUERY_2:
             case QUERY_3:
             case QUERY_4:
@@ -70,8 +73,8 @@ public class Client {
         optionalQuery.orElseThrow(() -> new IllegalStateException("Error: no query to run")).run();
 
         /* Close all */
-        sensorIList.destroy();
-        readingIList.destroy();
+       // sensorIList.destroy();
+       // readingIList.destroy();
 
         /* Shutdown */
         HazelcastClient.shutdownAll();
