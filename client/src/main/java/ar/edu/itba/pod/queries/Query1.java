@@ -43,7 +43,7 @@ public class Query1 extends GenericQuery<String, Long> {
 
     @Override
     protected String getHeaders() {
-        return "Sensor; Amount\n";
+        return "Sensor; Total_Count\n";
     }
 
     @Override
