@@ -25,26 +25,7 @@ public class Query5 extends GenericQuery<String, Long> {
     ) {
         super(hazelcastInstance, arguments);
         activeSensors = filterActiveSensors(sensors);
-        System.out.println(activeSensors.size());
     }
-
-//    @Override
-//    public void run() throws ExecutionException, InterruptedException, IOException {
-//        final JobTracker jobTracker = getJobTracker("q5");
-//
-//        final IList<Reading> readingIList = hazelcastInstance.getList("readings");
-//        final KeyValueSource<String, Reading> source = KeyValueSource.fromList(readingIList);
-//        System.out.println("size "+ readingIList.size());
-//        final Job<String, Reading> job = jobTracker.newJob(source);
-//        final ICompletableFuture<List<Map.Entry<String, Long>>> future = job
-//                .mapper(new ReadingActiveMapper<>(activeSensors))
-//                .reducer(new SumReducerFactory<>())
-//                .submit(new GroupByMillionsCollator());
-//
-//        System.out.println(future.get().toString());//.forEach(k -> System.out.println(k ));
-//        result = future.get();
-//        System.out.println("finish map reduce");
-//    }
 
     @Override
     protected ICompletableFuture<List<Map.Entry<String, Long>>> submit() {
