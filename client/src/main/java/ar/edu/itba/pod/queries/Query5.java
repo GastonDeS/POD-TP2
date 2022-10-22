@@ -1,7 +1,8 @@
 package ar.edu.itba.pod.queries;
 
 import ar.edu.itba.pod.collators.GroupByMillionsCollator;
-import ar.edu.itba.pod.mappers.ReadingActiveMapper;
+import ar.edu.itba.pod.mappers.GenericReadingActiveMapper;
+import ar.edu.itba.pod.mappers.SensorDescAndHourlyMapper;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.models.SensorStatus;
@@ -31,7 +32,7 @@ public class Query5 extends GenericQuery<String, Long> {
     protected ICompletableFuture<List<Map.Entry<String, Long>>> submit() {
         final Job<String, Reading> job = getJobFromList("q5");
         return job
-                .mapper(new ReadingActiveMapper<>(activeSensors))
+                .mapper(new SensorDescAndHourlyMapper<>(activeSensors))
                 .reducer(new SumReducerFactory<>())
                 .submit(new GroupByMillionsCollator());
     }
