@@ -73,31 +73,29 @@ public class Client {
                 "Finished reading file"
         );
 
-        Optional<GenericQuery<?, ?>> optionalQuery = Optional.empty();
-
-        switch (arguments.getQuery()) {
-            case QUERY_1:
-                optionalQuery = Optional.of(new Query1(sensorIList, hazelcastInstance, arguments, timeLog));
-                break;
-            case QUERY_2:
-                optionalQuery = Optional.of(new Query2(hazelcastInstance, arguments, timeLog));
-                break;
-            case QUERY_3:
-                optionalQuery = Optional.of(new Query3(sensorIList, hazelcastInstance, arguments, timeLog));
-                break;
-            case QUERY_4:
-                optionalQuery = Optional.of(new Query4(sensorIList, hazelcastInstance, arguments, timeLog));
-                break;
-            case QUERY_5:
-                optionalQuery = Optional.of(new Query5(sensorIList, hazelcastInstance, arguments, timeLog));
-                break;
-        }
-
-        optionalQuery.orElseThrow(() -> new IllegalStateException("Error: no query to run")).run();
+        GenericQuery<?, ?> query = getQuery(sensorIList, hazelcastInstance, arguments, timeLog);
+        query.run();
 
         /* Shutdown */
         timeLog.close();
         HazelcastClient.shutdownAll();
+    }
+
+    private static GenericQuery<?, ?> getQuery(List<Sensor> sensorList, HazelcastInstance hazelcastInstance, Arguments arguments, TimeLog timeLog) {
+        switch (arguments.getQuery()) {
+            case QUERY_1:
+                return new Query1(sensorList, hazelcastInstance, arguments, timeLog);
+            case QUERY_2:
+                return new Query2(hazelcastInstance, arguments, timeLog);
+            case QUERY_3:
+                return new Query3(sensorList, hazelcastInstance, arguments, timeLog);
+            case QUERY_4:
+                return new Query4(sensorList, hazelcastInstance, arguments, timeLog);
+            case QUERY_5:
+                return new Query5(sensorList, hazelcastInstance, arguments, timeLog);
+            default:
+                throw new IllegalStateException("Error: no query to run");
+        }
     }
 
     private static HazelcastInstance getHazelcastInstance(String[] addresses) {
