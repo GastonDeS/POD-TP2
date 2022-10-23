@@ -7,7 +7,7 @@ import com.hazelcast.mapreduce.Context;
 
 import java.util.List;
 
-public class YearMapper extends GenericReadingActiveMapper<MonthlyMeanKey> {
+public class YearMapper extends GenericReadingActiveMapper<MonthlyMeanKey, Long> {
     private final int year;
 
     public YearMapper(List<Sensor> activeSensors, int year) {

@@ -38,12 +38,7 @@ public class MeasurementByHour implements Serializable, Comparable<MeasurementBy
 
     @Override
     public int compareTo(MeasurementByHour o) {
-        return Comparator.comparingLong(MeasurementByHour::getMeasurement)
-                .thenComparingInt(MeasurementByHour::getYear)
-                .thenComparingInt(MeasurementByHour::getMonth)
-                .thenComparingInt(MeasurementByHour::getDay)
-                .thenComparingInt(MeasurementByHour::getTime)
-                .compare(this, o);
+        return Comparator.comparingLong(MeasurementByHour::getMeasurement).compare(this, o);
     }
 
     /*
