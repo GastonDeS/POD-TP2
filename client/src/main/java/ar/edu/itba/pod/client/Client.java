@@ -107,7 +107,7 @@ public class Client {
 
     private static void fillReadingsList(IList<Reading> readingIList, String inPath) {
         final CsvParser readingsCsvParser = new ReadingsCsvParser(readingIList);
-        Path readingsPath = Paths.get(inPath + "readings.csv");
+        Path readingsPath = Paths.get(inPath + "readingsShort.csv");
         readingsCsvParser.loadData(readingsPath);
     }
 

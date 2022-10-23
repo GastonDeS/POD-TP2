@@ -20,6 +20,8 @@ public class YearlyCountCollator<K,V> implements Collator<Map.Entry<String,Long>
         for (int i = 1; i < list.size(); i+=2) {
             Map.Entry<String, Long> prev = list.get(i-1); // _we
             Map.Entry<String,Long> actual = list.get(i); // _wd
+            System.out.println("prev: " + prev.getKey() + ", value: " + prev.getValue());
+            System.out.println("actual: " + actual.getKey() + ", value: " + actual.getValue());
             String token = prev.getKey().split("_")[0];
             list1.add(new AbstractMap.SimpleEntry<>((token + ";" + actual.getValue() + ";" + prev.getValue()), (actual.getValue()) + prev.getValue()));
         }
