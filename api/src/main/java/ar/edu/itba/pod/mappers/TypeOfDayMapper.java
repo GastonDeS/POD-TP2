@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.mappers;
 
 import ar.edu.itba.pod.models.Reading;
+import ar.edu.itba.pod.models.YearDayType;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
@@ -10,16 +11,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class TypeOfDayMapper implements Mapper<String, Reading, String, Long> {
+public class TypeOfDayMapper implements Mapper<String, Reading, YearDayType, Long> {
 
     private final List<String> weekendDays = getWeekendDays();
 
     @Override
-    public void map(String k, Reading reading, Context<String, Long> context) {
+    public void map(String k, Reading reading, Context<YearDayType, Long> context) {
         if(isWeekend(reading.getDay()))
-            context.emit(reading.getYear() + "_WE", Long.valueOf(reading.getHourly_Counts()));
+            context.emit(new YearDayType(reading.getYear(), "WE"), Long.valueOf(reading.getHourly_Counts()));
         else
-            context.emit(reading.getYear() + "_WD", Long.valueOf(reading.getHourly_Counts()));
+            context.emit(new YearDayType(reading.getYear(), "WD"), Long.valueOf(reading.getHourly_Counts()));
     }
 
     private boolean isWeekend(String day) {

@@ -4,10 +4,10 @@ package ar.edu.itba.pod.reducers;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-public class SumReducerFactory implements ReducerFactory<String, Long, Long> {
+public class SumReducerFactory<T> implements ReducerFactory<T, Long, Long> {
 
     @Override
-    public Reducer<Long, Long> newReducer(String key) {
+    public Reducer<Long, Long> newReducer(T key) {
         return new SumReducer();
     }
 

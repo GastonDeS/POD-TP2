@@ -32,7 +32,7 @@ public class Query5 extends GenericQuery<String, Long> {
         final Job<String, Reading> job = getJobFromReadingsList("q5");
         return job
                 .mapper(new SensorActiveMapper(activeSensors))
-                .reducer(new SumReducerFactory())
+                .reducer(new SumReducerFactory<>())
                 .submit(new GroupByMillionsCollator());
     }
 
