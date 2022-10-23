@@ -6,7 +6,6 @@ import ar.edu.itba.pod.combiners.MonthlyMeanPerYearCombinerFactory;
 import ar.edu.itba.pod.mappers.MaxMonthlyMeanPerYearMapper;
 import ar.edu.itba.pod.mappers.MonthlyMeanPerYearMapper;
 import ar.edu.itba.pod.models.MonthlyMeanKey;
-import ar.edu.itba.pod.models.MonthlyMeanValue;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.reducers.MaxMonthlyMeanPerYearReducerFactory;

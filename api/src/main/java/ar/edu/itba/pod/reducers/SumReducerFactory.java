@@ -4,14 +4,14 @@ package ar.edu.itba.pod.reducers;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-public class SumReducerFactory<K> implements ReducerFactory<K, Number, Number> {
+public class SumReducerFactory implements ReducerFactory<String, Long, Long> {
 
     @Override
-    public Reducer<Number, Number> newReducer(K key) {
+    public Reducer<Long, Long> newReducer(String key) {
         return new SumReducer();
     }
 
-    private class SumReducer extends Reducer<Number, Number> {
+    private class SumReducer extends Reducer<Long, Long> {
         private long sum;
 
         @Override
@@ -20,12 +20,12 @@ public class SumReducerFactory<K> implements ReducerFactory<K, Number, Number> {
         }
 
         @Override
-        public void reduce(Number value) {
-            sum += value.longValue();
+        public void reduce(Long value) {
+            sum += value;
         }
 
         @Override
-        public Number finalizeReduce() {
+        public Long finalizeReduce() {
             return sum;
         }
     }

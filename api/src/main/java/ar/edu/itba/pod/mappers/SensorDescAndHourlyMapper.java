@@ -5,9 +5,8 @@ import ar.edu.itba.pod.models.Sensor;
 import com.hazelcast.mapreduce.Context;
 
 import java.util.List;
-import java.util.Optional;
 
-public class SensorDescAndHourlyMapper<K> extends GenericReadingActiveMapper<K>{
+public class SensorDescAndHourlyMapper extends GenericReadingActiveMapper {
     public SensorDescAndHourlyMapper(List<Sensor> activeSensors) {
         super(activeSensors);
     }
