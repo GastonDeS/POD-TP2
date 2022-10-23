@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class OrderByDescendingCollator<K, V> implements Collator<Map.Entry<String, Long>, List<Map.Entry<String, Long>>> {
+public class OrderByDescendingCollator implements Collator<Map.Entry<String, Long>, List<Map.Entry<String, Long>>> {
 
     @Override
     public List<Map.Entry<String, Long>> collate(Iterable<Map.Entry<String, Long>> iterable) {

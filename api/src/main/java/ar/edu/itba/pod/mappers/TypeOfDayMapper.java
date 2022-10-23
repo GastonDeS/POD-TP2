@@ -4,17 +4,29 @@ import ar.edu.itba.pod.models.Reading;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
-public class TypeOfDayMapper<K> implements Mapper<K, Reading, String, Long> {
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
+public class TypeOfDayMapper implements Mapper<String, Reading, String, Long> {
+
+    private final List<String> weekendDays = getWeekendDays();
 
     @Override
-    public void map(K k, Reading reading, Context<String, Long> context) {
+    public void map(String k, Reading reading, Context<String, Long> context) {
         if(isWeekend(reading.getDay()))
-            context.emit(reading.getYear() + "_we", Long.valueOf(reading.getHourly_Counts()));
+            context.emit(reading.getYear() + "_WE", Long.valueOf(reading.getHourly_Counts()));
         else
-            context.emit(reading.getYear() + "_wd", Long.valueOf(reading.getHourly_Counts()));
+            context.emit(reading.getYear() + "_WD", Long.valueOf(reading.getHourly_Counts()));
     }
 
-    private boolean isWeekend(String day){
-        return day.equals("Saturday") || day.equals("Sunday");
+    private boolean isWeekend(String day) {
+        return weekendDays.contains(day);
+    }
+
+    private List<String> getWeekendDays(){
+        return Arrays.asList(DayOfWeek.SATURDAY.getDisplayName(TextStyle.FULL, Locale.ENGLISH), DayOfWeek.SUNDAY.getDisplayName(TextStyle.FULL, Locale.ENGLISH));
     }
 }

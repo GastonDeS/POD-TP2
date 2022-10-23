@@ -31,8 +31,8 @@ public class Query5 extends GenericQuery<String, Long> {
     protected ICompletableFuture<List<Map.Entry<String, Long>>> submit() {
         final Job<String, Reading> job = getJobFromReadingsList("q5");
         return job
-                .mapper(new SensorDescAndHourlyMapper<>(activeSensors))
-                .reducer(new SumReducerFactory<>())
+                .mapper(new SensorDescAndHourlyMapper(activeSensors))
+                .reducer(new SumReducerFactory())
                 .submit(new GroupByMillionsCollator());
     }
 

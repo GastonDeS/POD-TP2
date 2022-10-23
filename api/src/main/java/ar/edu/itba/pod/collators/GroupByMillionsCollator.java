@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 // TODO check why we need K and V if not explodes
-public class GroupByMillionsCollator<K, V> implements Collator<Map.Entry<String,Long>, List<Map.Entry<String,Long>>> {
+public class GroupByMillionsCollator implements Collator<Map.Entry<String,Long>, List<Map.Entry<String,Long>>> {
 
     private static final Long MILLION = 1000000L;
 
