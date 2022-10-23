@@ -4,7 +4,7 @@ import ar.edu.itba.pod.collators.MaxMonthlyMeanPerYearCollator;
 import ar.edu.itba.pod.combiners.MaxMonthlyMeanPerYearCombinerFactory;
 import ar.edu.itba.pod.combiners.MonthlyMeanPerYearCombinerFactory;
 import ar.edu.itba.pod.mappers.MaxMonthlyMeanPerYearMapper;
-import ar.edu.itba.pod.mappers.MonthlyMeanPerYearMapper;
+import ar.edu.itba.pod.mappers.YearMapper;
 import ar.edu.itba.pod.models.MonthlyMeanKey;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
@@ -44,7 +44,7 @@ public class Query4 extends GenericQuery<String, Double> {
     protected ICompletableFuture<List<Map.Entry<String, Double>>> submit() throws ExecutionException, InterruptedException {
         final Job<String, Reading> job = getJobFromReadingsList("q4_first");
         ICompletableFuture<Map<MonthlyMeanKey, Double>> future = job
-                .mapper(new MonthlyMeanPerYearMapper(activeSensors, year))
+                .mapper(new YearMapper(activeSensors, year))
                 .combiner(new MonthlyMeanPerYearCombinerFactory())
                 .reducer(new MonthlyMeanPerYearReducerFactory())
                 .submit();

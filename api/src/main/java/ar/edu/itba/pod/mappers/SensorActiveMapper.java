@@ -6,8 +6,8 @@ import com.hazelcast.mapreduce.Context;
 
 import java.util.List;
 
-public class SensorDescAndHourlyMapper extends GenericReadingActiveMapper {
-    public SensorDescAndHourlyMapper(List<Sensor> activeSensors) {
+public class SensorActiveMapper extends GenericReadingActiveMapper<String> {
+    public SensorActiveMapper(List<Sensor> activeSensors) {
         super(activeSensors);
     }
 
