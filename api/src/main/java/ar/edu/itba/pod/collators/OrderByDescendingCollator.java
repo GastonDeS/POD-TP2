@@ -11,7 +11,6 @@ public class OrderByDescendingCollator<K, V> implements Collator<Map.Entry<Strin
 
     @Override
     public List<Map.Entry<String, Long>> collate(Iterable<Map.Entry<String, Long>> iterable) {
-
         return StreamSupport.stream(iterable.spliterator(), false).sorted((o1, o2) -> {
             int valComp = (o1.getValue()).compareTo(o2.getValue());
             if (valComp != 0)
