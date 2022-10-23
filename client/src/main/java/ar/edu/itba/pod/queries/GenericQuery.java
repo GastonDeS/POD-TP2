@@ -18,17 +18,25 @@ public abstract class GenericQuery<K, V> {
     protected final HazelcastInstance hazelcastInstance;
     private final String outPath;
     private final Queries query;
+    private final TimeLog timeLog;
 
-    public GenericQuery(final HazelcastInstance hazelcastInstance, final Arguments arguments) {
+    public GenericQuery(final HazelcastInstance hazelcastInstance, final Arguments arguments, final TimeLog timeLog) {
         this.hazelcastInstance = hazelcastInstance;
         this.outPath = arguments.getOutPath();
         this.query = arguments.getQuery();
+        this.timeLog = timeLog;
     }
 
     public void run() throws ExecutionException, InterruptedException {
         /* Log start time */
-        logTime("Query " + query.getId() + " starting time: " + Instant.now());
+        timeLog.addLog(
+                Thread.currentThread().getStackTrace()[1].getMethodName(),
+                "GenericQuery",
+                Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                "Starting map reduce"
+        );
 
+        /* Submit job */
         ICompletableFuture<List<Map.Entry<K, V>>> future = this.submit();
 
         /* Get results */
@@ -38,8 +46,13 @@ public abstract class GenericQuery<K, V> {
         String info = getResult(results);
         writeResult(info);
 
-        /* Log end time */
-        logTime("Query " + query.getId() + " ending time: " + Instant.now());
+        /* Log finish time */
+        timeLog.addLog(
+                Thread.currentThread().getStackTrace()[1].getMethodName(),
+                "GenericQuery",
+                Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                "Ending map reduce"
+        );
     }
 
     private void writeResult(String info) {
@@ -49,16 +62,6 @@ public abstract class GenericQuery<K, V> {
             fileWriter.close();
         } catch (IOException e) {
             System.out.println("Error: cannot write results to file " + outPath + query.getQueryFile());
-        }
-    }
-
-    public void logTime(String time) {
-        try {
-            final FileWriter fileWriter = new FileWriter(outPath + query.getTimeFile());
-            fileWriter.write(time);
-            fileWriter.close();
-        } catch (IOException e) {
-            System.out.println("Error: cannot log time to file " + outPath + query.getTimeFile());
         }
     }
 

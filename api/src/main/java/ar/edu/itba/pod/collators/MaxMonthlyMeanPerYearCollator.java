@@ -3,24 +3,32 @@ package ar.edu.itba.pod.collators;
 import ar.edu.itba.pod.models.MonthlyMeanValue;
 import com.hazelcast.mapreduce.Collator;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.*;
 
 public class MaxMonthlyMeanPerYearCollator implements Collator<Map.Entry<String, MonthlyMeanValue>, List<Map.Entry<String,Double>>> {
 
+    private static final Comparator<Map.Entry<String, Double>> ENTRY_COMPARATOR =
+            (o1, o2) -> {
+                if (o2.getValue().compareTo(o1.getValue()) == 0) {
+                    return o2.getKey().compareTo(o1.getKey());
+                }
+                return o2.getValue().compareTo(o1.getValue());
+            };
+
+    private final int n;
+
+    public MaxMonthlyMeanPerYearCollator(int n) {
+        this.n = n;
+    }
+
     @Override
     public List<Map.Entry<String, Double>> collate(Iterable<Map.Entry<String, MonthlyMeanValue>> iterable) {
-        List<Map.Entry<String, MonthlyMeanValue>> list = StreamSupport.stream(iterable.spliterator(),false).collect(Collectors.toList());
+        TreeSet<Map.Entry<String, Double>> results = new TreeSet<>(ENTRY_COMPARATOR);
 
-        List<Map.Entry<String, Double>> results = new ArrayList<>();
-        for (Map.Entry<String, MonthlyMeanValue> entry : list) {
-            String key = entry.getKey() + ";" + entry.getValue().getMonth();
-            results.add(new AbstractMap.SimpleEntry<>(key, entry.getValue().getMean()));
-        }
-        return results;
+        iterable.forEach(entry -> results.add(
+                new AbstractMap.SimpleEntry<>(entry.getKey() + ";" + entry.getValue().getMonth(), entry.getValue().getMean()))
+        );
+
+        return new ArrayList<>(results).subList(0, n);
     }
 }

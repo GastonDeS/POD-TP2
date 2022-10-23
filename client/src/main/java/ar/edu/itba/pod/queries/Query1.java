@@ -6,6 +6,7 @@ import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.reducers.SumReducerFactory;
 import ar.edu.itba.pod.utils.Arguments;
+import ar.edu.itba.pod.utils.TimeLog;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
@@ -19,9 +20,10 @@ public class Query1 extends GenericQuery<String, Long> {
     public Query1(
             List<Sensor> sensors,
             final HazelcastInstance hazelcastInstance,
-            final Arguments arguments
-    ) {
-        super(hazelcastInstance, arguments);
+            final Arguments arguments,
+            final TimeLog timeLog
+        ) {
+        super(hazelcastInstance, arguments, timeLog);
         activeSensors = filterActiveSensors(sensors);
     }
 

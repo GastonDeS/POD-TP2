@@ -4,17 +4,23 @@ import ar.edu.itba.pod.models.MonthlyMeanKey;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-public class MonthlyMeanPerYearReducerFactory implements ReducerFactory<MonthlyMeanKey, Long, Double> {
+import java.time.Month;
 
-    private static final int MONTH = 30;
+public class MonthlyMeanPerYearReducerFactory implements ReducerFactory<MonthlyMeanKey, Long, Double> {
 
     @Override
     public Reducer<Long, Double> newReducer(MonthlyMeanKey key) {
-        return new MonthlyMeanPerYearReducer();
+        int monthLength = Month.valueOf(key.getMonth().toUpperCase()).length(false);
+        return new MonthlyMeanPerYearReducer(monthLength);
     }
 
     private static class MonthlyMeanPerYearReducer extends Reducer<Long, Double> {
         private Long readingsPerMonth;
+        private final int monthLength;
+
+        private MonthlyMeanPerYearReducer(int monthLength) {
+            this.monthLength = monthLength;
+        }
 
         @Override
         public void beginReduce() {
@@ -28,7 +34,7 @@ public class MonthlyMeanPerYearReducerFactory implements ReducerFactory<MonthlyM
 
         @Override
         public Double finalizeReduce() {
-            return (double) readingsPerMonth / MONTH;
+            return (double) readingsPerMonth / monthLength;
         }
     }
 }

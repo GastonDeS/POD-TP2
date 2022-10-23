@@ -4,10 +4,6 @@ import ar.edu.itba.pod.models.MonthlyMeanValue;
 import com.hazelcast.mapreduce.Reducer;
 import com.hazelcast.mapreduce.ReducerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class MaxMonthlyMeanPerYearReducerFactory implements ReducerFactory<String, MonthlyMeanValue, MonthlyMeanValue> {
 
     @Override
@@ -16,21 +12,23 @@ public class MaxMonthlyMeanPerYearReducerFactory implements ReducerFactory<Strin
     }
 
     private static class MaxMonthlyMeanPerYearReducer extends Reducer<MonthlyMeanValue, MonthlyMeanValue> {
-        private List<MonthlyMeanValue> means;
+        private MonthlyMeanValue maxMean;
 
         @Override
         public void beginReduce() {
-            this.means = new ArrayList<>();
+            this.maxMean = new MonthlyMeanValue(null, 0.0);
         }
 
         @Override
         public void reduce(MonthlyMeanValue value) {
-            means.add(value);
+            if (value.getMean() > maxMean.getMean()) {
+                maxMean = value;
+            }
         }
 
         @Override
         public MonthlyMeanValue finalizeReduce() {
-            return Collections.max(means);
+            return maxMean;
         }
     }
 }

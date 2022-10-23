@@ -12,6 +12,7 @@ import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.reducers.MaxMonthlyMeanPerYearReducerFactory;
 import ar.edu.itba.pod.reducers.MonthlyMeanPerYearReducerFactory;
 import ar.edu.itba.pod.utils.Arguments;
+import ar.edu.itba.pod.utils.TimeLog;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.core.IMap;
@@ -31,9 +32,10 @@ public class Query4 extends GenericQuery<String, Double> {
     public Query4(
             List<Sensor> sensors,
             final HazelcastInstance hazelcastInstance,
-            final Arguments arguments
-    ) {
-        super(hazelcastInstance, arguments);
+            final Arguments arguments,
+            final TimeLog timeLog
+            ) {
+        super(hazelcastInstance, arguments, timeLog);
         this.activeSensors = filterActiveSensors(sensors);
         this.year = arguments.getYear();
         this.n = arguments.getN();
@@ -41,7 +43,7 @@ public class Query4 extends GenericQuery<String, Double> {
 
     @Override
     protected ICompletableFuture<List<Map.Entry<String, Double>>> submit() throws ExecutionException, InterruptedException {
-        final Job<String, Reading> job = getJobFromReadingsList("q4");
+        final Job<String, Reading> job = getJobFromReadingsList("q4_first");
         ICompletableFuture<Map<MonthlyMeanKey, Double>> future = job
                 .mapper(new MonthlyMeanPerYearMapper(activeSensors, year))
                 .combiner(new MonthlyMeanPerYearCombinerFactory())
@@ -50,22 +52,17 @@ public class Query4 extends GenericQuery<String, Double> {
 
         Map<MonthlyMeanKey, Double> monthlyMeanPerYear = future.get();
 
-        final IMap<String, MonthlyMeanValue> meanIMap = hazelcastInstance.getMap("means");
+        final IMap<MonthlyMeanKey, Double> meanIMap = hazelcastInstance.getMap("means");
+        meanIMap.clear();
+        meanIMap.putAll(monthlyMeanPerYear);
 
-        for (Map.Entry<MonthlyMeanKey, Double> entry : monthlyMeanPerYear.entrySet()) {
-            meanIMap.put(entry.getKey().getSensor_ID(), new MonthlyMeanValue(entry.getKey().getMonth(), entry.getValue()));
-        }
+        Job<MonthlyMeanKey, Double> finalJob = this.getJobFromMeansMap("q4_second");
 
-        Job<String, MonthlyMeanValue> finalJob = this.getJobFromMeansMap("q4");
-
-        ICompletableFuture<List<Map.Entry<String, Double>>> finalFuture = finalJob
+        return finalJob
                 .mapper(new MaxMonthlyMeanPerYearMapper())
                 .combiner(new MaxMonthlyMeanPerYearCombinerFactory())
                 .reducer(new MaxMonthlyMeanPerYearReducerFactory())
-                .submit(new MaxMonthlyMeanPerYearCollator());
-
-        meanIMap.destroy();
-        return finalFuture;
+                .submit(new MaxMonthlyMeanPerYearCollator(n));
     }
 
     @Override
@@ -78,11 +75,11 @@ public class Query4 extends GenericQuery<String, Double> {
         return entry.getKey() + ";" + entry.getValue() +"\n";
     }
 
-    private Job<String, MonthlyMeanValue> getJobFromMeansMap(String queryName) {
+    private Job<MonthlyMeanKey, Double> getJobFromMeansMap(String queryName) {
         final JobTracker jobTracker = hazelcastInstance.getJobTracker("g10_" + queryName);
 
-        final IMap<String, MonthlyMeanValue> meanIMap = hazelcastInstance.getMap("means");
-        final KeyValueSource<String, MonthlyMeanValue> source = KeyValueSource.fromMap(meanIMap);
+        final IMap<MonthlyMeanKey, Double> meanIMap = hazelcastInstance.getMap("means");
+        final KeyValueSource<MonthlyMeanKey, Double> source = KeyValueSource.fromMap(meanIMap);
 
         return jobTracker.newJob(source);
     }

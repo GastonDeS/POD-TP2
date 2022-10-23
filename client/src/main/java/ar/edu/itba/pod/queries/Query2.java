@@ -6,6 +6,7 @@ import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.reducers.SumReducerFactory;
 import ar.edu.itba.pod.utils.Arguments;
 import ar.edu.itba.pod.utils.Triple;
+import ar.edu.itba.pod.utils.TimeLog;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
@@ -16,9 +17,10 @@ public class Query2 extends GenericQuery<String, Triple>{
 
     public Query2(
             final HazelcastInstance hazelcastInstance,
-            final Arguments arguments
-    ) {
-        super(hazelcastInstance, arguments);
+            final Arguments arguments,
+            final TimeLog timeLog
+            ) {
+        super(hazelcastInstance, arguments, timeLog);
     }
 
     @Override
