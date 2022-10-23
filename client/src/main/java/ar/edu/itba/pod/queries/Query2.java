@@ -5,7 +5,7 @@ import ar.edu.itba.pod.mappers.TypeOfDayMapper;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.reducers.SumReducerFactory;
 import ar.edu.itba.pod.utils.Arguments;
-import ar.edu.itba.pod.models.Triple;
+import ar.edu.itba.pod.models.MeasurementByDayType;
 import ar.edu.itba.pod.utils.TimeLog;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
@@ -13,7 +13,7 @@ import com.hazelcast.mapreduce.Job;
 
 import java.util.List;
 import java.util.Map;
-public class Query2 extends GenericQuery<String, Triple>{
+public class Query2 extends GenericQuery<String, MeasurementByDayType>{
 
     public Query2(
             final HazelcastInstance hazelcastInstance,
@@ -24,7 +24,7 @@ public class Query2 extends GenericQuery<String, Triple>{
     }
 
     @Override
-    protected ICompletableFuture<List<Map.Entry<String, Triple>>> submit() {
+    protected ICompletableFuture<List<Map.Entry<String, MeasurementByDayType>>> submit() {
         final Job<String, Reading> job = getJobFromReadingsList("q2");
         return job
                 .mapper(new TypeOfDayMapper())
@@ -38,8 +38,8 @@ public class Query2 extends GenericQuery<String, Triple>{
     }
 
     @Override
-    protected String formatData(Map.Entry<String, Triple> entry) {
-        Triple data = entry.getValue();
+    protected String formatData(Map.Entry<String, MeasurementByDayType> entry) {
+        MeasurementByDayType data = entry.getValue();
         return entry.getKey() + ";" + data.getWeekdaysCount() + ";" + data.getWeekendsCount() + ";" + data.getTotalCount() + "\n";
     }
 }

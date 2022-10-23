@@ -11,7 +11,7 @@ public class SumReducerFactory implements ReducerFactory<String, Long, Long> {
         return new SumReducer();
     }
 
-    private class SumReducer extends Reducer<Long, Long> {
+    private static class SumReducer extends Reducer<Long, Long> {
         private long sum;
 
         @Override

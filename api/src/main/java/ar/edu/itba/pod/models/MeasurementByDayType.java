@@ -1,16 +1,13 @@
 package ar.edu.itba.pod.models;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
-public class Triple implements Serializable {
+public class MeasurementByDayType implements Serializable {
     private final Long weekdaysCount;
     private final Long weekendsCount;
     private final Long totalCount;
 
-    public Triple(Long weekdaysCount, Long weekendsCount, Long totalCount) {
+    public MeasurementByDayType(Long weekdaysCount, Long weekendsCount, Long totalCount) {
         this.weekdaysCount = weekdaysCount;
         this.weekendsCount = weekendsCount;
         this.totalCount = totalCount;
