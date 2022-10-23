@@ -106,28 +106,4 @@ public class Arguments {
     public int getYear() {
         return year;
     }
-
-    public void setQuery(Queries query) {
-        this.query = query;
-    }
-
-    public void setAddresses(Collection<String> addresses) {
-        this.addresses = addresses;
-    }
-
-    public void setInPath(String inPath) {
-        this.inPath = inPath;
-    }
-
-    public void setOutPath(String outPath) {
-        this.outPath = outPath;
-    }
-
-    public void setN(int n) {
-        this.n = n;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
 }
