@@ -17,7 +17,7 @@ public abstract class CsvParserImpl implements CsvParser {
             assignIndexes(line);
             iterator.forEachRemaining(this::parseLine);
         } catch (IOException e) {
-            System.out.println("Error reading file "+path);
+            System.out.println("Error reading file " + path);
         }
     }
 

@@ -11,7 +11,6 @@ public class ReadingsCsvParser extends CsvParserImpl implements CsvParser {
     Map<ReadingsHeaders, Integer> headersMap;
     IList<Reading> readings;
 
-
     public ReadingsCsvParser(IList<Reading> readings) {
         headersMap = new HashMap<>();
         if (readings == null) throw new IllegalArgumentException("Readings list cannot be null");

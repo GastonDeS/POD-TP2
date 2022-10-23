@@ -8,9 +8,11 @@ import com.hazelcast.mapreduce.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public abstract class GenericQuery<K, V> {
     protected final HazelcastInstance hazelcastInstance;
@@ -25,7 +27,7 @@ public abstract class GenericQuery<K, V> {
 
     public void run() throws ExecutionException, InterruptedException {
         /* Log start time */
-        logTime("Query " + query.getId() + " starting time: " + System.currentTimeMillis());
+        logTime("Query " + query.getId() + " starting time: " + Instant.now());
 
         ICompletableFuture<List<Map.Entry<K, V>>> future = this.submit();
 
@@ -37,7 +39,7 @@ public abstract class GenericQuery<K, V> {
         writeResult(info);
 
         /* Log end time */
-        logTime("Query " + query.getId() + " ending time: " + System.currentTimeMillis());
+        logTime("Query " + query.getId() + " ending time: " + Instant.now());
     }
 
     private void writeResult(String info) {
@@ -74,18 +76,27 @@ public abstract class GenericQuery<K, V> {
         ABSTRACT METHODS
     */
 
-    protected abstract ICompletableFuture<List<Map.Entry<K, V>>> submit();
+    protected abstract ICompletableFuture<List<Map.Entry<K, V>>> submit() throws ExecutionException, InterruptedException;
 
     protected abstract String getHeaders();
 
     protected abstract String formatData(Map.Entry<K, V> entry);
 
-    protected Job<String, Reading> getJobFromList(String queryName) {
+    protected Job<String, Reading> getJobFromReadingsList(String queryName) {
         final JobTracker jobTracker = hazelcastInstance.getJobTracker("g10_" + queryName);
 
         final IList<Reading> readingIList = hazelcastInstance.getList("readings");
         final KeyValueSource<String, Reading> source = KeyValueSource.fromList(readingIList);
 
         return jobTracker.newJob(source);
+    }
+
+    /*
+        COMMON UTILS
+    */
+
+    protected List<Sensor> filterActiveSensors(List<Sensor> sensors) {
+        return sensors.stream().filter(s -> s.status == SensorStatus.ACTIVE)
+                .collect(Collectors.toList());
     }
 }

@@ -1,11 +1,5 @@
 package ar.edu.itba.pod.models;
 
-import com.hazelcast.nio.ObjectDataInput;
-import com.hazelcast.nio.ObjectDataOutput;
-import com.hazelcast.nio.serialization.Data;
-import com.hazelcast.nio.serialization.DataSerializable;
-
-import java.io.IOException;
 import java.io.Serializable;
 
 public class Reading implements Serializable {

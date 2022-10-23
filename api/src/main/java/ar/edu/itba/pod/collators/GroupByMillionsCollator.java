@@ -1,6 +1,5 @@
 package ar.edu.itba.pod.collators;
 
-import com.hazelcast.core.IMap;
 import com.hazelcast.mapreduce.Collator;
 
 import java.util.AbstractMap;
@@ -13,7 +12,7 @@ import java.util.stream.StreamSupport;
 // TODO check why we need K and V if not explodes
 public class GroupByMillionsCollator<K, V> implements Collator<Map.Entry<String,Long>, List<Map.Entry<String,Long>>> {
 
-    private static Long MILLION = 1000000L;
+    private static final Long MILLION = 1000000L;
 
     @Override
     public List<Map.Entry<String, Long>> collate(Iterable<Map.Entry<String,Long>> iterable) {

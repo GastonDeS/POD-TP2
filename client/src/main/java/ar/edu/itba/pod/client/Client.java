@@ -6,6 +6,7 @@ import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.queries.GenericQuery;
 import ar.edu.itba.pod.queries.Query2;
 import ar.edu.itba.pod.queries.Query1;
+import ar.edu.itba.pod.queries.Query4;
 import ar.edu.itba.pod.queries.Query5;
 import ar.edu.itba.pod.utils.Arguments;
 import ar.edu.itba.pod.utils.CsvParser;
@@ -68,6 +69,8 @@ public class Client {
                 break;
             case QUERY_3:
             case QUERY_4:
+                optionalQuery = Optional.of(new Query4(sensorIList, hazelcastInstance, arguments));
+                break;
             case QUERY_5:
                 optionalQuery = Optional.of(new Query5(sensorIList, hazelcastInstance, arguments));
                 break;

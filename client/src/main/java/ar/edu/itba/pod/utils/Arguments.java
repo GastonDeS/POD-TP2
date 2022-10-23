@@ -12,6 +12,7 @@ public class Arguments {
     private Collection<String> addresses;
     private String inPath;
     private String outPath;
+    private int min;
     private int n;
     private int year;
 
@@ -19,6 +20,7 @@ public class Arguments {
     private static final String ADDRESSES_KEY = "addresses";
     private static final String IN_PATH_KEY = "inPath";
     private static final String OUT_PATH_KEY = "outPath";
+    private static final String MIN_KEY = "min";
     private static final String N_KEY = "n";
     private static final String YEAR_KEY = "year";
 
@@ -44,9 +46,21 @@ public class Arguments {
         this.inPath = props.getProperty(IN_PATH_KEY);
         this.outPath = props.getProperty(OUT_PATH_KEY);
 
+        if (query.equals(Queries.QUERY_3)) {
+            parseQuery3(props);
+        }
+
         if (query.equals(Queries.QUERY_4)) {
             parseQuery4(props);
         }
+    }
+
+    private void parseQuery3(Properties props) throws InvalidArgumentsException {
+        if (!props.containsKey(MIN_KEY)) {
+            throw new InvalidArgumentsException("Error: invalid min argument");
+        }
+
+        this.min = Integer.parseInt(props.getProperty(MIN_KEY));
     }
 
     private void parseQuery4(Properties props) throws InvalidArgumentsException {
@@ -79,6 +93,10 @@ public class Arguments {
 
     public String getOutPath() {
         return outPath;
+    }
+
+    public int getMin() {
+        return min;
     }
 
     public int getN() {
