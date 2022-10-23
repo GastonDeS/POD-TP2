@@ -8,10 +8,10 @@ public class TypeOfDayMapper<K> implements Mapper<K, Reading, String, Long> {
 
     @Override
     public void map(K k, Reading reading, Context<String, Long> context) {
-        if(isWeekend(reading.day))
-            context.emit(reading.year + "_we", Long.valueOf(reading.hourly_Counts));
+        if(isWeekend(reading.getDay()))
+            context.emit(reading.getYear() + "_we", Long.valueOf(reading.getHourly_Counts()));
         else
-            context.emit(reading.year + "_wd", Long.valueOf(reading.hourly_Counts));
+            context.emit(reading.getYear() + "_wd", Long.valueOf(reading.getHourly_Counts()));
     }
 
     private boolean isWeekend(String day){

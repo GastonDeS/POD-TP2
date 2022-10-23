@@ -3,6 +3,7 @@ package ar.edu.itba.pod.queries;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
 import ar.edu.itba.pod.utils.Arguments;
+import ar.edu.itba.pod.utils.TimeLog;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
@@ -17,8 +18,8 @@ public class Query3 extends GenericQuery<String, Long> {
 
     private final int min;
 
-    public Query3(List<Sensor> sensors, HazelcastInstance hazelcastInstance, Arguments arguments) {
-        super(hazelcastInstance, arguments);
+    public Query3(List<Sensor> sensors, HazelcastInstance hazelcastInstance, Arguments arguments, TimeLog timeLog) {
+        super(hazelcastInstance, arguments, timeLog);
         this.activeSensors = filterActiveSensors(sensors);
         this.min = arguments.getMin();
     }
@@ -26,8 +27,9 @@ public class Query3 extends GenericQuery<String, Long> {
     @Override
     protected ICompletableFuture<List<Map.Entry<String, Long>>> submit() throws ExecutionException, InterruptedException {
         final Job<String, Reading> job = getJobFromReadingsList("q3");
-        return job
-                .mapper()
+        return null; // TODO implement
+//        return job
+//                .mapper()
     }
 
     @Override

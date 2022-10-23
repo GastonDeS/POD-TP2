@@ -11,21 +11,17 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class GenericReadingActiveMapper<K> implements Mapper<K, Reading, String, Long> {
-    // shared constants
-    private static final long ONE = 1;
-    private static final long ZERO = 0;
-
     public SerializableMap<String, Sensor> activeSensors;
 
     public GenericReadingActiveMapper(List<Sensor> activeSensors) {
         this.activeSensors = new SerializableHashMap<>();
         activeSensors
-                .forEach(s -> this.activeSensors.put(s.sensor_ID, s));
+                .forEach(s -> this.activeSensors.put(s.getSensor_ID(), s));
     }
 
     @Override
     public void map(K k, Reading reading, Context<String, Long> context) {
-        Optional<Sensor> sensor = Optional.ofNullable(activeSensors.get(reading.sensor_ID));
+        Optional<Sensor> sensor = Optional.ofNullable(activeSensors.get(reading.getSensor_ID()));
         sensor.ifPresent(s -> emitter(reading, s, context));
     }
 

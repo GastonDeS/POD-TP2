@@ -22,11 +22,11 @@ public class MonthlyMeanPerYearMapper implements Mapper<String, Reading, Monthly
     public void map(String sensor, Reading reading, Context<MonthlyMeanKey, Long> context) {
         Optional<Sensor> optionalSensor = activeSensors
                 .stream()
-                .filter(s -> s.sensor_ID.equals(reading.sensor_ID) && Integer.parseInt(reading.year) == year)
+                .filter(s -> s.getSensor_ID().equals(reading.getSensor_ID()) && Integer.parseInt(reading.getYear()) == year)
                 .findFirst();
         optionalSensor.ifPresent(value -> context.emit(
-                new MonthlyMeanKey(value.sensor_description, reading.month),
-                Long.parseLong(reading.hourly_Counts))
+                new MonthlyMeanKey(value.getSensor_description(), reading.getMonth()),
+                Long.parseLong(reading.getHourly_Counts()))
         );
     }
 }

@@ -99,7 +99,7 @@ public abstract class GenericQuery<K, V> {
     */
 
     protected List<Sensor> filterActiveSensors(List<Sensor> sensors) {
-        return sensors.stream().filter(s -> s.status == SensorStatus.ACTIVE)
+        return sensors.stream().filter(s -> s.getStatus() == SensorStatus.ACTIVE)
                 .collect(Collectors.toList());
     }
 }

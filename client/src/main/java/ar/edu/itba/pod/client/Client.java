@@ -4,11 +4,7 @@ import ar.edu.itba.pod.constants.Queries;
 import ar.edu.itba.pod.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
-import ar.edu.itba.pod.queries.GenericQuery;
-import ar.edu.itba.pod.queries.Query2;
-import ar.edu.itba.pod.queries.Query1;
-import ar.edu.itba.pod.queries.Query4;
-import ar.edu.itba.pod.queries.Query5;
+import ar.edu.itba.pod.queries.*;
 import ar.edu.itba.pod.utils.*;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
@@ -87,6 +83,8 @@ public class Client {
                 optionalQuery = Optional.of(new Query2(hazelcastInstance, arguments, timeLog));
                 break;
             case QUERY_3:
+                optionalQuery = Optional.of(new Query3(sensorIList, hazelcastInstance, arguments, timeLog));
+                break;
             case QUERY_4:
                 optionalQuery = Optional.of(new Query4(sensorIList, hazelcastInstance, arguments, timeLog));
                 break;
