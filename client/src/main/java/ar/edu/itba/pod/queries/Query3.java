@@ -1,7 +1,11 @@
 package ar.edu.itba.pod.queries;
 
+import ar.edu.itba.pod.collators.BoundedReadingCollator;
+import ar.edu.itba.pod.mappers.BoundedReadingMapper;
+import ar.edu.itba.pod.models.MeasurementByHour;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
+import ar.edu.itba.pod.reducers.BoundedReadingReducerFactory;
 import ar.edu.itba.pod.utils.Arguments;
 import ar.edu.itba.pod.utils.TimeLog;
 import com.hazelcast.core.HazelcastInstance;
@@ -12,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class Query3 extends GenericQuery<String, Long> {
+public class Query3 extends GenericQuery<String, MeasurementByHour> {
 
     private final List<Sensor> activeSensors;
 
@@ -25,11 +29,13 @@ public class Query3 extends GenericQuery<String, Long> {
     }
 
     @Override
-    protected ICompletableFuture<List<Map.Entry<String, Long>>> submit() throws ExecutionException, InterruptedException {
+    protected ICompletableFuture<List<Map.Entry<String, MeasurementByHour>>> submit() throws ExecutionException, InterruptedException {
         final Job<String, Reading> job = getJobFromReadingsList("q3");
-        return null; // TODO implement
-//        return job
-//                .mapper()
+        return job
+                .mapper(new BoundedReadingMapper(activeSensors, min))
+                .reducer(new BoundedReadingReducerFactory())
+                .submit(new BoundedReadingCollator());
+
     }
 
     @Override
@@ -38,7 +44,7 @@ public class Query3 extends GenericQuery<String, Long> {
     }
 
     @Override
-    protected String formatData(Map.Entry<String, Long> entry) {
+    protected String formatData(Map.Entry<String, MeasurementByHour> entry) {
         return null;
     }
 }

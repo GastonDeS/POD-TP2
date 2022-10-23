@@ -10,7 +10,7 @@ import com.hazelcast.mapreduce.Mapper;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class GenericReadingActiveMapper<KOut> implements Mapper<String, Reading, KOut, Long> {
+public abstract class GenericReadingActiveMapper<KOut, VOut> implements Mapper<String, Reading, KOut, VOut> {
     public SerializableMap<String, Sensor> activeSensors;
 
     public GenericReadingActiveMapper(List<Sensor> activeSensors) {
@@ -20,11 +20,11 @@ public abstract class GenericReadingActiveMapper<KOut> implements Mapper<String,
     }
 
     @Override
-    public void map(String k, Reading reading, Context<KOut, Long> context) {
+    public void map(String k, Reading reading, Context<KOut, VOut> context) {
         Optional<Sensor> sensor = Optional.ofNullable(activeSensors.get(reading.getSensor_ID()));
         sensor.ifPresent(s -> emitter(reading, s, context));
     }
 
     /////////////  Abstract Methods  /////////////
-    protected abstract void emitter(Reading reading, Sensor sensor, Context<KOut, Long> context);
+    protected abstract void emitter(Reading reading, Sensor sensor, Context<KOut, VOut> context);
 }

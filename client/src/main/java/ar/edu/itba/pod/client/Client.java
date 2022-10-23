@@ -29,7 +29,7 @@ public class Client {
     private static final String GROUP_NAME = "g10";
     private static final String GROUP_PASS = "g10-pass";
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException, InvalidArgumentsException {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         logger.info("hz-config Client Starting ...");
 
         /* Get arguments */
@@ -48,7 +48,7 @@ public class Client {
         final TimeLog timeLog = new TimeLog(arguments.getOutPath(), arguments.getQuery().getTimeFile());
         timeLog.addLog(
                 Thread.currentThread().getStackTrace()[1].getMethodName(),
-                "Client",
+                Client.class.getName(),
                 Thread.currentThread().getStackTrace()[1].getLineNumber(),
                 "Reading file starting"
         );
@@ -68,7 +68,7 @@ public class Client {
         /* Log reading file finish time */
         timeLog.addLog(
                 Thread.currentThread().getStackTrace()[1].getMethodName(),
-                "Client",
+                Client.class.getName(),
                 Thread.currentThread().getStackTrace()[1].getLineNumber(),
                 "Finished reading file"
         );
