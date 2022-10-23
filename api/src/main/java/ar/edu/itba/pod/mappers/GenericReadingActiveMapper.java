@@ -26,9 +26,9 @@ public abstract class GenericReadingActiveMapper<K> implements Mapper<K, Reading
     @Override
     public void map(K k, Reading reading, Context<String, Long> context) {
         Optional<Sensor> sensor = Optional.ofNullable(activeSensors.get(reading.sensor_ID));
-        emitter(reading, sensor, context);
+        sensor.ifPresent(s -> emitter(reading, s, context));
     }
 
     /////////////  Abstract Methods  /////////////
-    protected abstract void emitter(Reading reading, Optional<Sensor> sensor, Context<String, Long> context);
+    protected abstract void emitter(Reading reading, Sensor sensor, Context<String, Long> context);
 }

@@ -13,7 +13,7 @@ public class SensorDescAndHourlyMapper<K> extends GenericReadingActiveMapper<K>{
     }
 
     @Override
-    protected void emitter(Reading reading, Optional<Sensor> sensor, Context<String, Long> context) {
-        sensor.ifPresent(value -> context.emit(sensor.get().sensor_description, Long.valueOf(reading.hourly_Counts)));
+    protected void emitter(Reading reading, Sensor sensor, Context<String, Long> context) {
+        context.emit(sensor.sensor_description, Long.valueOf(reading.hourly_Counts));
     }
 }
