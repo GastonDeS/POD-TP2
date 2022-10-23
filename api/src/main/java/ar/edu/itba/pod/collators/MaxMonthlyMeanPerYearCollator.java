@@ -9,10 +9,11 @@ public class MaxMonthlyMeanPerYearCollator implements Collator<Map.Entry<String,
 
     private static final Comparator<Map.Entry<String, Double>> ENTRY_COMPARATOR =
             (o1, o2) -> {
-                if (o2.getValue().compareTo(o1.getValue()) == 0) {
+                int cmp = o2.getValue().compareTo(o1.getValue());
+                if (cmp == 0) {
                     return o2.getKey().compareTo(o1.getKey());
                 }
-                return o2.getValue().compareTo(o1.getValue());
+                return cmp;
             };
 
     private final int n;
