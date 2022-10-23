@@ -76,8 +76,8 @@ public class Client {
         optionalQuery.orElseThrow(() -> new IllegalStateException("Error: no query to run")).run();
 
         /* Close all */
-       // sensorIList.destroy();
-       // readingIList.destroy();
+        sensorIList.destroy();
+        readingIList.destroy();
 
         /* Shutdown */
         HazelcastClient.shutdownAll();
@@ -107,7 +107,7 @@ public class Client {
 
     private static void fillReadingsList(IList<Reading> readingIList, String inPath) {
         final CsvParser readingsCsvParser = new ReadingsCsvParser(readingIList);
-        Path readingsPath = Paths.get(inPath + "readingsShort.csv");
+        Path readingsPath = Paths.get(inPath + "readings.csv");
         readingsCsvParser.loadData(readingsPath);
     }
 
