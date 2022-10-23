@@ -1,7 +1,9 @@
 package ar.edu.itba.pod.collators;
 
+import ar.edu.itba.pod.constants.Month;
 import com.hazelcast.mapreduce.Collator;
 
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -31,14 +33,20 @@ public class AverageCollator<K, V> implements Collator<Map.Entry<String,Long>, L
         });
 
         Map<String, List<Map.Entry<String,Double>>> groupedBySensor = StreamSupport.stream(iterable.spliterator(),false)
-                .map(e -> new AbstractMap.SimpleEntry<String, Double>(e.getKey(), e.getValue() / 30.0))
+                .map(e -> {
+                    try {
+                        return new AbstractMap.SimpleEntry<String, Double>(e.getKey(), e.getValue() / Double.parseDouble(Month.getMonthByName(e.getKey().split(";")[1]).daysQty+""));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                })
                         .collect(Collectors.groupingBy(e -> e.getKey().split(";")[0]));
 
         List<Map.Entry<String, Double>> result = new ArrayList<>();
 
         groupedBySensor.forEach((k,v) -> {
             Map.Entry<String, Double> max = v.stream().min(comparator).get(); // its min because we want the max
-            result.add(new AbstractMap.SimpleEntry<>(max.getKey(), max.getValue()));
+            result.add(new AbstractMap.SimpleEntry<>(max.getKey(), Math.round(max.getValue()*100.0)/100.0));
         });
 
         result.sort(comparator);

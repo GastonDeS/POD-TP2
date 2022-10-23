@@ -17,8 +17,8 @@ public class CountByMonthMapper<T> extends GenericReadingActiveMapper<T>{
     }
 
     @Override
-    protected void emitter(Reading reading, Optional<Sensor> sensor, Context<String, Long> context) {
-        if (reading.year.equals(year))
-            sensor.ifPresent(s1 -> context.emit(s1.sensor_description+";"+reading.month, Long.valueOf(reading.hourly_Counts)));
+    protected void emitter(Reading reading, Sensor sensor, Context<String, Long> context) {
+        if (reading.getYear().equals(year))
+            context.emit(sensor.getSensor_description()+";"+reading.getMonth(), Long.valueOf(reading.getHourly_Counts()));
     }
 }
