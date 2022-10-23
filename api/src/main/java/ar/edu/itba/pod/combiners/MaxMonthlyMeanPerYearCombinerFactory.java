@@ -31,4 +31,3 @@ public class MaxMonthlyMeanPerYearCombinerFactory implements CombinerFactory<Str
         }
     }
 }
-
