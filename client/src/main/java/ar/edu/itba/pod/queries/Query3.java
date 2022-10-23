@@ -38,6 +38,16 @@ public class Query3 extends GenericQuery<String, MeasurementByHour> {
 
     }
 
+//    private String parseDateTime(String dateTime) throws ParseException {
+//        final String oldFormat = "MMMM d, yyyy hh:mm:ss a";
+//        final String newFormat = "dd/MM/yyyy HH:00";
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
+//        Date d = sdf.parse(dateTime);
+//        sdf.applyPattern(newFormat);
+//        return sdf.format(d);
+//    }
+
     @Override
     protected String getHeaders() {
         return "Sensor;Max_Reading_Count;Max_Reading_DateTime\n";
