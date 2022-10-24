@@ -46,6 +46,6 @@ public class Query3 extends GenericQuery<String, MeasurementByHour> {
 
     @Override
     protected String formatData(Map.Entry<String, MeasurementByHour> entry) {
-        return entry.getKey() + ";" + entry.getValue().getMeasurement() + ";" + entry.getValue().formatDate();
+        return entry.getKey() + ";" + entry.getValue().getMeasurement() + ";" + entry.getValue().formatDate()+"\n";
     }
 }

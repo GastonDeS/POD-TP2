@@ -10,6 +10,7 @@ import com.hazelcast.mapreduce.Mapper;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class BoundedReadingMapper extends GenericReadingActiveMapper<String, MeasurementByHour> {
     private final int min;
@@ -21,13 +22,18 @@ public class BoundedReadingMapper extends GenericReadingActiveMapper<String, Mea
 
     @Override
     protected void emitter(Reading reading, Sensor sensor, Context<String, MeasurementByHour> context) {
-        if (Long.parseLong(reading.getHourly_Counts()) >= min) {
+        if (Long.parseLong(reading.getHourly_Counts()) > min) {
             try {
                 context.emit(
-                        reading.getSensor_ID(),
-                        new MeasurementByHour(Long.parseLong(reading.getHourly_Counts()), reading.getTime()));
+                        sensor.getSensor_description(),
+                        new MeasurementByHour(
+                                Long.parseLong(reading.getHourly_Counts()),
+                                reading.getYear(),
+                                reading.getMonth(),
+                                reading.getMdate(),
+                                reading.getTime()));
             } catch (ParseException e) {
-                // nothing to do
+                // Don't count this reading
             }
         }
     }

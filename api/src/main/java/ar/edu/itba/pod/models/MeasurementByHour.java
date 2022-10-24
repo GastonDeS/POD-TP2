@@ -3,23 +3,29 @@ package ar.edu.itba.pod.models;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MeasurementByHour implements Serializable, Comparable<MeasurementByHour>{
-    private final long measurement;
+    private final String inDateFormat = "d/MMMMM/yyyy HH:00";
+    private final String outDateFormat = "dd/MM/yyyy HH:00";
 
+    private final long measurement;
     private final Date date;
 
-    public MeasurementByHour(long measurement, String time) throws ParseException {
+    public MeasurementByHour(long measurement, String year, String month, String mdate, String time) throws ParseException {
         this.measurement = measurement;
-        date = parseDateTime(time);
+        this.date = parseDate(year, month, mdate, time);
     }
 
     @Override
     public int compareTo(MeasurementByHour o) {
-        return Comparator.comparingLong(MeasurementByHour::getMeasurement).compare(this, o);
+        return Comparator.comparingLong(MeasurementByHour::getMeasurement)
+                .thenComparing(MeasurementByHour::getDate)
+                .compare(this, o);
     }
 
 
@@ -29,17 +35,14 @@ public class MeasurementByHour implements Serializable, Comparable<MeasurementBy
 
     public Date getDate() { return date; }
 
-    private Date parseDateTime(String dateTime) throws ParseException {
-        final String oldFormat = "MMMM d, yyyy hh:mm:ss a";
-
-        SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
-        Date d = sdf.parse(dateTime);
-        return d;
+    public Date parseDate(String year, String month, String mdate, String time) throws ParseException {
+        String formatDate = String.format("%s/%s/%s %s:00", mdate, month, year, time);
+        SimpleDateFormat sdf = new SimpleDateFormat(inDateFormat, Locale.ENGLISH);
+        return sdf.parse(formatDate);
     }
 
     public String formatDate() {
-        final String newFormat = "dd/MM/yyyy HH:00";
-        SimpleDateFormat sdf = new SimpleDateFormat(newFormat);
+        SimpleDateFormat sdf = new SimpleDateFormat(outDateFormat, Locale.ENGLISH);
         return sdf.format(date);
     }
 
