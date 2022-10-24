@@ -1,67 +1,58 @@
 package ar.edu.itba.pod.models;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.Objects;
 
 public class MeasurementByHour implements Serializable, Comparable<MeasurementByHour>{
-    private int year;
-    private int month;
-    private int day;
-    private int time;
-    private long measurement;
+    private final long measurement;
 
-    public MeasurementByHour withYear(int year) {
-        this.year = year;
-        return this;
-    }
+    private final Date date;
 
-    public MeasurementByHour withMonth(int month) {
-        this.month = month;
-        return this;
-    }
-
-    public MeasurementByHour withDay(int day) {
-        this.day = day;
-        return this;
-    }
-
-    public MeasurementByHour withTime(int time) {
-        this.time = time;
-        return this;
-    }
-
-    public MeasurementByHour withMeasurement(long measurement) {
+    public MeasurementByHour(long measurement, String time) throws ParseException {
         this.measurement = measurement;
-        return this;
+        date = parseDateTime(time);
     }
-
 
     @Override
     public int compareTo(MeasurementByHour o) {
         return Comparator.comparingLong(MeasurementByHour::getMeasurement).compare(this, o);
     }
 
-    /*
-        GETTERS
-     */
-
-    public int getYear() {
-        return year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getDay() {
-        return day;
-    }
-
-    public int getTime() {
-        return time;
-    }
 
     public long getMeasurement() {
         return measurement;
+    }
+
+    public Date getDate() { return date; }
+
+    private Date parseDateTime(String dateTime) throws ParseException {
+        final String oldFormat = "MMMM d, yyyy hh:mm:ss a";
+
+        SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
+        Date d = sdf.parse(dateTime);
+        return d;
+    }
+
+    public String formatDate() {
+        final String newFormat = "dd/MM/yyyy HH:00";
+        SimpleDateFormat sdf = new SimpleDateFormat(newFormat);
+        return sdf.format(date);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MeasurementByHour that = (MeasurementByHour) o;
+        return measurement == that.measurement && Objects.equals(date, that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(measurement, date);
     }
 }

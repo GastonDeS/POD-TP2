@@ -7,6 +7,7 @@ import ar.edu.itba.pod.models.Sensor;
 import com.hazelcast.mapreduce.Context;
 import com.hazelcast.mapreduce.Mapper;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +22,13 @@ public class BoundedReadingMapper extends GenericReadingActiveMapper<String, Mea
     @Override
     protected void emitter(Reading reading, Sensor sensor, Context<String, MeasurementByHour> context) {
         if (Long.parseLong(reading.getHourly_Counts()) >= min) {
-            context.emit(
-                reading.getSensor_ID(),
-                new MeasurementByHour()
-                        .withMeasurement(Long.parseLong(reading.getHourly_Counts()))
-                        .withYear(Integer.parseInt(reading.getYear()))
-                        .withMonth(Integer.parseInt(reading.getMonth()))
-                        .withDay(Integer.parseInt(reading.getDay()))
-                        .withTime(Integer.parseInt(reading.getTime())));
+            try {
+                context.emit(
+                        reading.getSensor_ID(),
+                        new MeasurementByHour(Long.parseLong(reading.getHourly_Counts()), reading.getTime()));
+            } catch (ParseException e) {
+                // nothing to do
+            }
         }
     }
 }

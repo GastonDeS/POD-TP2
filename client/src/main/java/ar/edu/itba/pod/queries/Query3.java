@@ -1,6 +1,7 @@
 package ar.edu.itba.pod.queries;
 
 import ar.edu.itba.pod.collators.BoundedReadingCollator;
+import ar.edu.itba.pod.combiners.BoundedReadingCombinerFactory;
 import ar.edu.itba.pod.mappers.BoundedReadingMapper;
 import ar.edu.itba.pod.models.MeasurementByHour;
 import ar.edu.itba.pod.models.Reading;
@@ -11,7 +12,6 @@ import ar.edu.itba.pod.utils.TimeLog;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ICompletableFuture;
 import com.hazelcast.mapreduce.Job;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -33,20 +33,11 @@ public class Query3 extends GenericQuery<String, MeasurementByHour> {
         final Job<String, Reading> job = getJobFromReadingsList("q3");
         return job
                 .mapper(new BoundedReadingMapper(activeSensors, min))
+                .combiner(new BoundedReadingCombinerFactory())
                 .reducer(new BoundedReadingReducerFactory())
                 .submit(new BoundedReadingCollator());
 
     }
-
-//    private String parseDateTime(String dateTime) throws ParseException {
-//        final String oldFormat = "MMMM d, yyyy hh:mm:ss a";
-//        final String newFormat = "dd/MM/yyyy HH:00";
-//
-//        SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
-//        Date d = sdf.parse(dateTime);
-//        sdf.applyPattern(newFormat);
-//        return sdf.format(d);
-//    }
 
     @Override
     protected String getHeaders() {
@@ -55,6 +46,6 @@ public class Query3 extends GenericQuery<String, MeasurementByHour> {
 
     @Override
     protected String formatData(Map.Entry<String, MeasurementByHour> entry) {
-        return null;
+        return entry.getKey() + ";" + entry.getValue().getMeasurement() + ";" + entry.getValue().formatDate();
     }
 }
