@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-// TODO check why we need K and V if not explodes
 public class GroupByMillionsCollator implements Collator<Map.Entry<String,Long>, List<Map.Entry<String,Long>>> {
 
     private static final Long MILLION = 1000000L;
@@ -25,14 +24,17 @@ public class GroupByMillionsCollator implements Collator<Map.Entry<String,Long>,
         }).collect(Collectors.toList());
 
         List<Map.Entry<String, Long>> list1 = new ArrayList<>();
-        for (int i = 1; i < list.size(); i++) {
-            Map.Entry<String, Long> prev = list.get(i-1);
-            Map.Entry<String,Long> actual = list.get(i);
-            if (prev.getValue() / MILLION == actual.getValue() / MILLION &&
-                    prev.getValue() >= MILLION) {
-                list1.add(new AbstractMap.SimpleEntry<>(prev.getKey()+";"+actual.getKey(), (prev.getValue()/MILLION)*MILLION));
+        for (int i = 0, j; i < list.size(); i++) {
+            for (j = i +1; j < list.size(); j++) {
+                Map.Entry<String, Long> prev = list.get(i);
+                Map.Entry<String,Long> actual = list.get(j);
+                if (prev.getValue() / MILLION == actual.getValue() / MILLION &&
+                        prev.getValue() >= MILLION) {
+                    list1.add(new AbstractMap.SimpleEntry<>(prev.getKey()+";"+actual.getKey(), (prev.getValue()/MILLION)*MILLION));
+                } else {
+                    break;
+                }
             }
-
         }
         return list1;
     }

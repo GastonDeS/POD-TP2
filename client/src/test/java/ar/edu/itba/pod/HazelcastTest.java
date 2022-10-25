@@ -141,7 +141,7 @@ public class HazelcastTest {
         List<Map.Entry<String, Long>> results = query.run();
         System.out.println(results);
 
-        //Assert.assertEquals(3, results.size()); //TODO: CHECK, SHOULD BE 3
+        Assert.assertEquals(3, results.size());
 
         String[] sensors = results.get(0).getKey().split(";");
         Assert.assertEquals("Sensor 1", sensors[0]);
