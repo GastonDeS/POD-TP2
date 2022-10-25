@@ -146,7 +146,7 @@ public class HazelcastTest {
         String[] sensors = results.get(0).getKey().split(";");
         Assert.assertEquals("Sensor 1", sensors[0]);
         Assert.assertEquals("Sensor 4", sensors[1]);
-//        Assert.assertEquals(1070000/30.0, results.get(0).getValue(), EPSILON);
+        Assert.assertEquals(Long.valueOf(1000000), results.get(0).getValue());
     }
 
     @After
