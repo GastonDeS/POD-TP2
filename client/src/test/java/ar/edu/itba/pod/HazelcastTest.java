@@ -83,8 +83,7 @@ public class HazelcastTest {
     }
 
     @Test
-    public void query1Test() throws InvalidArgumentsException, ExecutionException, InterruptedException {
-        arguments.setQuery(Queries.getFromId(1));
+    public void query1Test() throws ExecutionException, InterruptedException {
         GenericQuery<String, Long> query = new Query1(sensorIList, client, arguments, null);
         query.setGenerateOutputFile(false);
         List<Map.Entry<String, Long>> results = query.run();
@@ -94,8 +93,7 @@ public class HazelcastTest {
     }
 
     @Test
-    public void query2Test() throws InvalidArgumentsException, ExecutionException, InterruptedException {
-        arguments.setQuery(Queries.getFromId(2));
+    public void query2Test() throws ExecutionException, InterruptedException {
         GenericQuery<String, MeasurementByDayType> query = new Query2(client, arguments, null);
         query.setGenerateOutputFile(false);
         List<Map.Entry<String, MeasurementByDayType>> results = query.run();
@@ -107,8 +105,7 @@ public class HazelcastTest {
     }
 
     @Test
-    public void query3Test() throws InvalidArgumentsException, ExecutionException, InterruptedException {
-        arguments.setQuery(Queries.getFromId(3));
+    public void query3Test() throws ExecutionException, InterruptedException {
         arguments.setMin(2000);
         GenericQuery<String, MeasurementByHour> query = new Query3(sensorIList, client, arguments, null);
         query.setGenerateOutputFile(false);
@@ -122,8 +119,7 @@ public class HazelcastTest {
     }
 
     @Test
-    public void query4Test() throws InvalidArgumentsException, ExecutionException, InterruptedException {
-        arguments.setQuery(Queries.getFromId(3));
+    public void query4Test() throws ExecutionException, InterruptedException {
         arguments.setN(2);
         arguments.setYear(2016);
         GenericQuery<String, Double> query = new Query4(sensorIList, client, arguments, null);
@@ -136,6 +132,21 @@ public class HazelcastTest {
         Assert.assertEquals("Sensor 1", key[0]);
         Assert.assertEquals("September", key[1]);
         Assert.assertEquals(1070000/30.0, results.get(0).getValue(), EPSILON);
+    }
+
+    @Test
+    public void query5Test() throws ExecutionException, InterruptedException {
+        GenericQuery<String, Long> query = new Query5(sensorIList, client, arguments, null);
+        query.setGenerateOutputFile(false);
+        List<Map.Entry<String, Long>> results = query.run();
+        System.out.println(results);
+
+        //Assert.assertEquals(3, results.size()); //TODO: CHECK, SHOULD BE 3
+
+        String[] sensors = results.get(0).getKey().split(";");
+        Assert.assertEquals("Sensor 1", sensors[0]);
+        Assert.assertEquals("Sensor 4", sensors[1]);
+//        Assert.assertEquals(1070000/30.0, results.get(0).getValue(), EPSILON);
     }
 
     @After

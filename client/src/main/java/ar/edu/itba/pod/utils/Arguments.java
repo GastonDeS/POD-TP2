@@ -111,10 +111,6 @@ public class Arguments {
         SETTERS
      */
 
-    public void setQuery(Queries query) {
-        this.query = query;
-    }
-
     public void setMin(int min) {
         this.min = min;
     }
