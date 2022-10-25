@@ -1,6 +1,5 @@
 package ar.edu.itba.pod.client;
 
-import ar.edu.itba.pod.constants.Queries;
 import ar.edu.itba.pod.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
@@ -12,15 +11,12 @@ import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.config.GroupConfig;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IList;
-import jdk.jfr.StackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class Client {
@@ -48,7 +44,7 @@ public class Client {
         final TimeLog timeLog = new TimeLog(arguments.getOutPath(), arguments.getQuery().getTimeFile());
         timeLog.addLog(
                 Thread.currentThread().getStackTrace()[1].getMethodName(),
-                Client.class.getName(),
+                "Client",
                 Thread.currentThread().getStackTrace()[1].getLineNumber(),
                 "Reading file starting"
         );
@@ -68,7 +64,7 @@ public class Client {
         /* Log reading file finish time */
         timeLog.addLog(
                 Thread.currentThread().getStackTrace()[1].getMethodName(),
-                Client.class.getName(),
+                "Client",
                 Thread.currentThread().getStackTrace()[1].getLineNumber(),
                 "Finished reading file"
         );

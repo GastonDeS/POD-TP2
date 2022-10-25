@@ -106,4 +106,12 @@ public class Arguments {
     public int getYear() {
         return year;
     }
+
+    /*
+        SETTERS
+     */
+
+    public void setQuery(Queries query) {
+        this.query = query;
+    }
 }

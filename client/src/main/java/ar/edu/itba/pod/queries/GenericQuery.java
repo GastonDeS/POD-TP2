@@ -18,6 +18,7 @@ public abstract class GenericQuery<K, V> {
     private final String outPath;
     private final Queries query;
     private final TimeLog timeLog;
+    private boolean generateOutputFile = true;
 
     public GenericQuery(final HazelcastInstance hazelcastInstance, final Arguments arguments, final TimeLog timeLog) {
         this.hazelcastInstance = hazelcastInstance;
@@ -26,14 +27,16 @@ public abstract class GenericQuery<K, V> {
         this.timeLog = timeLog;
     }
 
-    public void run() throws ExecutionException, InterruptedException {
+    public List<Map.Entry<K, V>> run() throws ExecutionException, InterruptedException {
         /* Log start time */
-        timeLog.addLog(
-                Thread.currentThread().getStackTrace()[1].getMethodName(),
-                "GenericQuery",
-                Thread.currentThread().getStackTrace()[1].getLineNumber(),
-                "Starting map reduce"
-        );
+        if (generateOutputFile) {
+            timeLog.addLog(
+                    Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    "GenericQuery",
+                    Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                    "Starting map reduce"
+            );
+        }
 
         /* Submit job */
         ICompletableFuture<List<Map.Entry<K, V>>> future = this.submit();
@@ -42,16 +45,22 @@ public abstract class GenericQuery<K, V> {
         List<Map.Entry<K, V>> results = future.get();
 
         /* Write results */
-        String info = getResult(results);
-        writeResult(info);
+        if (generateOutputFile) {
+            String info = getResult(results);
+            writeResult(info);
+        }
 
         /* Log finish time */
-        timeLog.addLog(
-                Thread.currentThread().getStackTrace()[1].getMethodName(),
-                "GenericQuery",
-                Thread.currentThread().getStackTrace()[1].getLineNumber(),
-                "Ending map reduce"
-        );
+        if (generateOutputFile) {
+            timeLog.addLog(
+                    Thread.currentThread().getStackTrace()[1].getMethodName(),
+                    "GenericQuery",
+                    Thread.currentThread().getStackTrace()[1].getLineNumber(),
+                    "Ending map reduce"
+            );
+        }
+
+        return results;
     }
 
     private void writeResult(String info) {
@@ -100,5 +109,9 @@ public abstract class GenericQuery<K, V> {
     protected List<Sensor> filterActiveSensors(List<Sensor> sensors) {
         return sensors.stream().filter(s -> s.getStatus() == SensorStatus.ACTIVE)
                 .collect(Collectors.toList());
+    }
+
+    public void setGenerateOutputFile(boolean generateOutputFile) {
+        this.generateOutputFile = generateOutputFile;
     }
 }

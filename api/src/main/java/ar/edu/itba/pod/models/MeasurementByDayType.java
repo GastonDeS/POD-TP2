@@ -17,13 +17,16 @@ public class MeasurementByDayType implements Serializable {
         return weekdaysCount;
     }
 
-
     public Long getWeekendsCount() {
         return weekendsCount;
     }
 
-
     public Long getTotalCount() {
         return totalCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Weekdays: " + weekdaysCount + "\nWeekends: " + weekendsCount + "\nTotal: " + totalCount;
     }
 }

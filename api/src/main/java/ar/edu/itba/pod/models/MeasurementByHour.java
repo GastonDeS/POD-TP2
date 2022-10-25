@@ -3,7 +3,6 @@ package ar.edu.itba.pod.models;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
@@ -27,7 +26,6 @@ public class MeasurementByHour implements Serializable, Comparable<MeasurementBy
                 .thenComparing(MeasurementByHour::getDate)
                 .compare(this, o);
     }
-
 
     public long getMeasurement() {
         return measurement;
@@ -57,5 +55,10 @@ public class MeasurementByHour implements Serializable, Comparable<MeasurementBy
     @Override
     public int hashCode() {
         return Objects.hash(measurement, date);
+    }
+
+    @Override
+    public String toString() {
+        return "Measurement: " + measurement + "\nDate: " + date;
     }
 }
