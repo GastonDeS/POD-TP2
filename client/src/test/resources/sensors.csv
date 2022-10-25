@@ -1,0 +1,7 @@
+sensor_id;sensor_description;sensor_name;installation_date;status;note;direction_1;direction_2;latitude;longitude;location
+45;Sensor 1;Swa148_T;2017/06/29;A;;South;North;-37.81414074;144.9660938;(-37.81414074, 144.9660938)
+70;Sensor 2;Errol20_T;2020/10/12;A;;South;North;-37.80456984;144.94946229;(-37.80456984, 144.94946229)
+89;Sensor 3;CityLi_T;2013/12/11;I;;;;-37.81685963;144.96586576;(-37.81685963, 144.96586576)
+86;Sensor 4;574Qub_T;2021/12/21;A;;East;West;-37.80309992;144.94908064;(-37.80309992, 144.94908064)
+4;Sensor 5;Swa123_T;2009/03/23;A;;South;North;-37.81487988;144.9660878;(-37.81487988, 144.9660878)
+22;Sensor 6;Eli274_T;2013/08/12;R;;South;North;-37.81786445;144.96506823;(-37.81786445, 144.96506823)

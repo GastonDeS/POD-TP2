@@ -9,8 +9,6 @@ import com.hazelcast.mapreduce.Mapper;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
-import java.util.logging.Logger;
 
 public class BoundedReadingMapper extends GenericReadingActiveMapper<String, MeasurementByHour> {
     private final int min;

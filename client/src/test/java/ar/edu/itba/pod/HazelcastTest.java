@@ -1,18 +1,23 @@
 package ar.edu.itba.pod;
 
+import ar.edu.itba.pod.models.Reading;
+import ar.edu.itba.pod.models.Sensor;
+import ar.edu.itba.pod.utils.CsvParser;
+import ar.edu.itba.pod.utils.ReadingsCsvParser;
+import ar.edu.itba.pod.utils.SensorsCsvParser;
 import com.hazelcast.client.config.ClientConfig;
-import com.hazelcast.client.config.ClientNetworkConfig;
 import com.hazelcast.client.test.TestHazelcastFactory;
 import com.hazelcast.config.*;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IList;
 import com.hazelcast.core.IMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
-import java.util.Collections;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class HazelcastTest {
 
@@ -20,37 +25,20 @@ public class HazelcastTest {
     private HazelcastInstance member, client;
 
     @Before
-    public void setUp() throws FileNotFoundException {
+    public void setUp() {
         hazelcastFactory = new TestHazelcastFactory();
 
         // Group Config
         GroupConfig groupConfig = new GroupConfig().setName("g10").setPassword("g10-pass");
 
         // Config
-        Config config = new Config();
-        config.setGroupConfig(groupConfig);
-        MulticastConfig multicastConfig = new MulticastConfig();
-
-        JoinConfig joinConfig = new JoinConfig().setMulticastConfig(multicastConfig);
-
-        InterfacesConfig interfacesConfig = new InterfacesConfig()
-                .setInterfaces(Collections.singletonList("192.*.*.*")).setEnabled(true);
-
-        NetworkConfig networkConfig = new NetworkConfig().setInterfaces(interfacesConfig).setJoin(joinConfig);
-
-        config.setNetworkConfig(networkConfig);
-
-        // Management Center Config
-        ManagementCenterConfig managementCenterConfig = new ManagementCenterConfig()
-                .setUrl("http://localhost:32768/mancenter/")
-                .setEnabled(true);
-        config.setManagementCenterConfig(managementCenterConfig);
+        Config config = new Config().setGroupConfig(groupConfig);
 
         member = hazelcastFactory.newHazelcastInstance(config);
 
         // Client Config
         ClientConfig clientConfig = new ClientConfig().setGroupConfig(groupConfig);
-        clientConfig.setNetworkConfig(new ClientNetworkConfig().addAddress("192.168.1.51:5701"));
+
         client = hazelcastFactory.newHazelcastClient(clientConfig);
     }
 
@@ -66,9 +54,32 @@ public class HazelcastTest {
         Assert.assertEquals("test1", value);
     }
 
+    @Test
+    public void fillSensorsListTest() {
+        IList<Sensor> sensorIList = client.getList("sensors");
+        sensorIList.clear();
+        final CsvParser sensorsCsvParser = new SensorsCsvParser(sensorIList);
+        Path sensorsPath = Paths.get("src/test/resources/sensors.csv");
+        sensorsCsvParser.loadData(sensorsPath);
+
+        Assert.assertEquals(6, client.getList("sensors").size());
+    }
+
+    @Test
+    public void fillReadingsListTest() {
+        IList<Reading> readingIList = client.getList("readings");
+        readingIList.clear();
+        final CsvParser readingsCsvParser = new ReadingsCsvParser(readingIList);
+        Path sensorsPath = Paths.get("src/test/resources/readings.csv");
+        readingsCsvParser.loadData(sensorsPath);
+
+        Assert.assertEquals(27, client.getList("readings").size());
+    }
+
     @After
     public void tearDown() {
         hazelcastFactory.shutdownAll();
     }
+
 
 }
