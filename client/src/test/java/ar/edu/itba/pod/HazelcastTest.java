@@ -6,17 +6,13 @@ import ar.edu.itba.pod.models.MeasurementByDayType;
 import ar.edu.itba.pod.models.MeasurementByHour;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
-import ar.edu.itba.pod.queries.GenericQuery;
-import ar.edu.itba.pod.queries.Query1;
-import ar.edu.itba.pod.queries.Query2;
-import ar.edu.itba.pod.queries.Query3;
+import ar.edu.itba.pod.queries.*;
 import ar.edu.itba.pod.utils.*;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.test.TestHazelcastFactory;
 import com.hazelcast.config.*;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IList;
-import com.hazelcast.core.IMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,12 +20,13 @@ import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class HazelcastTest {
+
+    private static final Double EPSILON = 0.00001;
 
     private TestHazelcastFactory hazelcastFactory;
     private HazelcastInstance member, client;
@@ -75,18 +72,6 @@ public class HazelcastTest {
         readingsCsvParser.loadData(readingsPath);
     }
 
-//    @Test
-//    public void simpleTest() {
-//        String mapName = "testMap";
-//
-//        IMap<Integer, String> testMapFromMember = member.getMap(mapName);
-//        testMapFromMember.set(1, "test1");
-//
-//        IMap<Integer, String> testMap = client.getMap(mapName);
-//        String value = testMap.get(1);
-//        Assert.assertEquals("test1", value);
-//    }
-
     @Test
     public void fillSensorsListTest() {
         Assert.assertEquals(6, client.getList("sensors").size());
@@ -124,15 +109,33 @@ public class HazelcastTest {
     @Test
     public void query3Test() throws InvalidArgumentsException, ExecutionException, InterruptedException {
         arguments.setQuery(Queries.getFromId(3));
+        arguments.setMin(2000);
         GenericQuery<String, MeasurementByHour> query = new Query3(sensorIList, client, arguments, null);
         query.setGenerateOutputFile(false);
         List<Map.Entry<String, MeasurementByHour>> results = query.run();
 
+        Assert.assertEquals(3, results.size()); // Sensor 2 does not appear
+
         Assert.assertEquals("Sensor 1", results.get(0).getKey());
         Assert.assertEquals(Long.valueOf(1070000), Long.valueOf(results.get(0).getValue().getMeasurement()));
         Assert.assertEquals("Sun Sep 18 11:00:00 ART 2016", results.get(0).getValue().getDate().toString());
+    }
 
-        System.out.println(results);
+    @Test
+    public void query4Test() throws InvalidArgumentsException, ExecutionException, InterruptedException {
+        arguments.setQuery(Queries.getFromId(3));
+        arguments.setN(2);
+        arguments.setYear(2016);
+        GenericQuery<String, Double> query = new Query4(sensorIList, client, arguments, null);
+        query.setGenerateOutputFile(false);
+        List<Map.Entry<String, Double>> results = query.run();
+
+        Assert.assertEquals(2, results.size());
+
+        String[] key = results.get(0).getKey().split(";");
+        Assert.assertEquals("Sensor 1", key[0]);
+        Assert.assertEquals("September", key[1]);
+        Assert.assertEquals(1070000/30.0, results.get(0).getValue(), EPSILON);
     }
 
     @After

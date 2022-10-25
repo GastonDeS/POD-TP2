@@ -114,4 +114,16 @@ public class Arguments {
     public void setQuery(Queries query) {
         this.query = query;
     }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public void setN(int n) {
+        this.n = n;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
 }

@@ -30,6 +30,9 @@ public class MaxMonthlyMeanPerYearCollator implements Collator<Map.Entry<String,
                 new AbstractMap.SimpleEntry<>(entry.getKey() + ";" + entry.getValue().getMonth(), entry.getValue().getMean()))
         );
 
+        if (results.size() < n) {
+            return new ArrayList<>(results);
+        }
         return new ArrayList<>(results).subList(0, n);
     }
 }
