@@ -16,6 +16,7 @@ public abstract class CsvParserImpl implements CsvParser {
             String line = iterator.next();
             assignIndexes(line);
             iterator.forEachRemaining(this::parseLine);
+            processLastChunk();
         } catch (IOException e) {
             System.out.println("Error reading file " + path);
         }
@@ -25,5 +26,5 @@ public abstract class CsvParserImpl implements CsvParser {
 
     protected abstract void parseLine(String line);
 
-
+    protected abstract void processLastChunk();
 }

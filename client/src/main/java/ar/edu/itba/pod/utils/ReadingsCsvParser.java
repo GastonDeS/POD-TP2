@@ -11,10 +11,13 @@ public class ReadingsCsvParser extends CsvParserImpl implements CsvParser {
     Map<ReadingsHeaders, Integer> headersMap;
     IList<Reading> readings;
 
+    List<Reading> readingsChunk;
+
     public ReadingsCsvParser(IList<Reading> readings) {
         headersMap = new HashMap<>();
         if (readings == null) throw new IllegalArgumentException("Readings list cannot be null");
         this.readings = readings;
+        this.readingsChunk = new ArrayList<>();
     }
 
     @Override
@@ -34,7 +37,7 @@ public class ReadingsCsvParser extends CsvParserImpl implements CsvParser {
     protected void parseLine(String line) {
         String[] column = line.split(";");
 
-        readings.add(new Reading(
+        readingsChunk.add(new Reading(
                 column[headersMap.get(ReadingsHeaders.SENSOR_ID)],
                 column[headersMap.get(ReadingsHeaders.YEAR)],
                 column[headersMap.get(ReadingsHeaders.MONTH)],
@@ -43,5 +46,16 @@ public class ReadingsCsvParser extends CsvParserImpl implements CsvParser {
                 column[headersMap.get(ReadingsHeaders.TIME)],
                 column[headersMap.get(ReadingsHeaders.HOURLY_COUNTS)]
         ));
+
+        if (readingsChunk.size() == 100) {
+            readings.addAll(readingsChunk);
+            readingsChunk.clear();
+        }
+    }
+
+    @Override
+    protected void processLastChunk() {
+        readings.addAll(readingsChunk);
+        readingsChunk.clear();
     }
 }
