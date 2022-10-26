@@ -56,7 +56,7 @@ Cantidad total de peatones registrados por todos los sensores por cada año dura
 la cantidad total de peatones registrados por todos los sensores durante los weekends y 
 la suma de ambos valores.
 
-	$ ./query2.sh -Daddresses=127.0.0.1 -DinPath=. -DoutPath=. -n=5
+	$ ./query2.sh -Daddresses=127.0.0.1 -DinPath=. -DoutPath=.
 
 ## Query 3
 

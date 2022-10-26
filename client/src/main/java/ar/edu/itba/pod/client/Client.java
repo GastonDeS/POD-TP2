@@ -1,5 +1,6 @@
 package ar.edu.itba.pod.client;
 
+import ar.edu.itba.pod.constants.Queries;
 import ar.edu.itba.pod.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
@@ -25,7 +26,7 @@ public class Client {
     private static final String GROUP_NAME = "g10";
     private static final String GROUP_PASS = "g10-pass";
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) {
         logger.info("hz-config Client Starting ...");
 
         /* Get arguments */
@@ -34,7 +35,7 @@ public class Client {
         try {
             arguments.parse();
         } catch (InvalidArgumentsException e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
         }
 
         /* Create instance of Hazelcast Client */
@@ -69,12 +70,16 @@ public class Client {
                 "Finished reading file"
         );
 
-        GenericQuery<?, ?> query = getQuery(sensorIList, hazelcastInstance, arguments, timeLog);
-        query.run();
-
-        /* Shutdown */
-        timeLog.close();
-        HazelcastClient.shutdownAll();
+        try {
+            GenericQuery<?, ?> query = getQuery(sensorIList, hazelcastInstance, arguments, timeLog);
+            query.run();
+        } catch (ExecutionException | InterruptedException e) {
+            logger.error(e.getMessage());
+        } finally {
+            /* Shutdown */
+            timeLog.close();
+            HazelcastClient.shutdownAll();
+        }
     }
 
     private static GenericQuery<?, ?> getQuery(List<Sensor> sensorList, HazelcastInstance hazelcastInstance, Arguments arguments, TimeLog timeLog) {
@@ -118,7 +123,7 @@ public class Client {
 
     private static void fillReadingsList(IList<Reading> readingIList, String inPath) {
         final CsvParser readingsCsvParser = new ReadingsCsvParser(readingIList);
-        Path readingsPath = Paths.get(inPath + "readings.csv");
+        Path readingsPath = Paths.get(inPath + "readingsShort.csv");
         readingsCsvParser.loadData(readingsPath);
     }
 }
