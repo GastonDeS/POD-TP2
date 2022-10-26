@@ -1,11 +1,9 @@
 package ar.edu.itba.pod.mappers;
 
 import ar.edu.itba.pod.models.MeasurementByHour;
-import ar.edu.itba.pod.models.MonthlyMeanKey;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;
 import com.hazelcast.mapreduce.Context;
-import com.hazelcast.mapreduce.Mapper;
 
 import java.text.ParseException;
 import java.util.List;

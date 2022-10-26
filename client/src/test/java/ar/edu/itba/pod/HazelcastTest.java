@@ -1,7 +1,5 @@
 package ar.edu.itba.pod;
 
-import ar.edu.itba.pod.constants.Queries;
-import ar.edu.itba.pod.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.models.MeasurementByDayType;
 import ar.edu.itba.pod.models.MeasurementByHour;
 import ar.edu.itba.pod.models.Reading;
@@ -29,7 +27,7 @@ public class HazelcastTest {
     private static final Double EPSILON = 0.00001;
 
     private TestHazelcastFactory hazelcastFactory;
-    private HazelcastInstance member, client;
+    private HazelcastInstance client;
     private IList<Sensor> sensorIList;
     private IList<Reading> readingIList;
     private Arguments arguments;
@@ -45,7 +43,7 @@ public class HazelcastTest {
 
         // Config
         Config config = new Config().setGroupConfig(groupConfig);
-        member = hazelcastFactory.newHazelcastInstance(config);
+        hazelcastFactory.newHazelcastInstance(config);
 
         // Client Config
         ClientConfig clientConfig = new ClientConfig().setGroupConfig(groupConfig);
@@ -139,7 +137,6 @@ public class HazelcastTest {
         GenericQuery<String, Long> query = new Query5(sensorIList, client, arguments, null);
         query.setGenerateOutputFile(false);
         List<Map.Entry<String, Long>> results = query.run();
-        System.out.println(results);
 
         Assert.assertEquals(3, results.size());
 

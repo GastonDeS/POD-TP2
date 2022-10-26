@@ -15,7 +15,7 @@ public class GroupByMillionsCollator implements Collator<Map.Entry<String,Long>,
 
     @Override
     public List<Map.Entry<String, Long>> collate(Iterable<Map.Entry<String,Long>> iterable) {
-        List<Map.Entry> list = StreamSupport.stream(iterable.spliterator(),false).sorted((e1,e2) -> {
+        List<Map.Entry<String,Long>> list = StreamSupport.stream(iterable.spliterator(),false).sorted((e1,e2) -> {
             long cmp = (e1.getValue()/MILLION) - (e2.getValue()/MILLION);
             if (cmp == 0) {
                 cmp = -e1.getKey().compareTo(e2.getKey());

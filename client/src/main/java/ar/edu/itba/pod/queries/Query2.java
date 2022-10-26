@@ -3,7 +3,6 @@ package ar.edu.itba.pod.queries;
 import ar.edu.itba.pod.collators.YearlyCountCollator;
 import ar.edu.itba.pod.mappers.TypeOfDayMapper;
 import ar.edu.itba.pod.models.Reading;
-import ar.edu.itba.pod.models.YearDayType;
 import ar.edu.itba.pod.reducers.SumReducerFactory;
 import ar.edu.itba.pod.utils.Arguments;
 import ar.edu.itba.pod.models.MeasurementByDayType;
