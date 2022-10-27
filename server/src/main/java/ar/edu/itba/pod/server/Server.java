@@ -1,6 +1,5 @@
 package ar.edu.itba.pod.server;
 
-
 import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
 import org.slf4j.Logger;
@@ -34,13 +33,6 @@ public class Server {
                 .setJoin(joinConfig);
 
         config.setNetworkConfig(networkConfig);
-
-        // TODO: set management center
-        // Management Center Config
-//        ManagementCenterConfig managementCenterConfig = new ManagementCenterConfig()
-//                .setUrl("http://localhost:32768/mancenter/")
-//                .setEnabled(true);
-//        config.setManagementCenterConfig(managementCenterConfig);
 
         Hazelcast.newHazelcastInstance(config);
         logger.info("Server started");

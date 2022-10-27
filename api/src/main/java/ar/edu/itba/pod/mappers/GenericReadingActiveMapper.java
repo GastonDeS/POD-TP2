@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class GenericReadingActiveMapper<KOut, VOut> implements Mapper<String, Reading, KOut, VOut> {
-    public SerializableMap<String, Sensor> activeSensors;
+    private final SerializableMap<String, Sensor> activeSensors;
 
     public GenericReadingActiveMapper(List<Sensor> activeSensors) {
         this.activeSensors = new SerializableHashMap<>();

@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class MonthlyMeanKey implements Serializable {
-    private String sensor_ID;
-    private String month;
+    private final String sensor_ID;
+    private final String month;
 
     public MonthlyMeanKey(String sensor_ID, String month) {
         this.sensor_ID = sensor_ID;

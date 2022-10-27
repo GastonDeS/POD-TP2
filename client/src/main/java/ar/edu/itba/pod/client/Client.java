@@ -1,6 +1,5 @@
 package ar.edu.itba.pod.client;
 
-import ar.edu.itba.pod.constants.Queries;
 import ar.edu.itba.pod.exceptions.InvalidArgumentsException;
 import ar.edu.itba.pod.models.Reading;
 import ar.edu.itba.pod.models.Sensor;

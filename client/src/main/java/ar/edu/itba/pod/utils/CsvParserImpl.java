@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class CsvParserImpl implements CsvParser {
@@ -22,6 +21,10 @@ public abstract class CsvParserImpl implements CsvParser {
         }
     }
 
+    /**
+     * Assign headers' indexes for needed fields
+     * @param headers
+     */
     protected abstract void assignIndexes(String headers);
 
     protected abstract void parseLine(String line);

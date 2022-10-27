@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class MonthlyMeanValue implements Serializable, Comparable<MonthlyMeanValue> {
-    private String month;
-    private Double mean;
+    private final String month;
+    private final Double mean;
 
     public MonthlyMeanValue(String month, Double mean) {
         this.month = month;

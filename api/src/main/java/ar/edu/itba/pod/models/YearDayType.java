@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class YearDayType implements Serializable {
-    private String year;
-    private String typeOfDay;
+    private final String year;
+    private final String typeOfDay;
 
     public YearDayType(String year, String day) {
         this.year = year;

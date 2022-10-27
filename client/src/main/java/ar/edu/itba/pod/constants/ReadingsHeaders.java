@@ -9,9 +9,13 @@ public enum ReadingsHeaders {
     TIME("Time"),
     HOURLY_COUNTS("Hourly_Counts");
 
-    public final String label;
+    private final String label;
 
     ReadingsHeaders(String label) {
         this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

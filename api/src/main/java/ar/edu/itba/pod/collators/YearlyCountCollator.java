@@ -15,10 +15,10 @@ public class YearlyCountCollator implements Collator<Map.Entry<YearDayType,Long>
     @Override
     public List<Map.Entry<String, MeasurementByDayType>> collate(Iterable<Map.Entry<YearDayType, Long>> iterable) {
 
-
-        List<Map.Entry<YearDayType, Long>> list = StreamSupport.stream(iterable.spliterator(),false).sorted((e1, e2) -> {
-           return -e1.getKey().compareTo(e2.getKey());
-        }).collect(Collectors.toList());
+        List<Map.Entry<YearDayType, Long>> list = StreamSupport
+                .stream(iterable.spliterator(),false)
+                .sorted((e1, e2) -> -e1.getKey().compareTo(e2.getKey()))
+                .collect(Collectors.toList());
 
         List<Map.Entry<String, MeasurementByDayType>> results = new ArrayList<>();
         for (int i = 1; i < list.size(); i+=2) {

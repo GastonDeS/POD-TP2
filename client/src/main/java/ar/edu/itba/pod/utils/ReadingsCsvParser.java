@@ -26,7 +26,7 @@ public class ReadingsCsvParser extends CsvParserImpl implements CsvParser {
 
         for (int i = 0; i < headersToken.length; i++) {
             for (ReadingsHeaders header : ReadingsHeaders.values()) {
-                if (header.label.equals(headersToken[i])) {
+                if (header.getLabel().equals(headersToken[i])) {
                     headersMap.put(header, i);
                 }
             }
