@@ -13,10 +13,10 @@ public class BoundedReadingCollator implements Collator<Map.Entry<String, Measur
     @Override
     public List<Map.Entry<String, MeasurementByHour>> collate(Iterable<Map.Entry<String, MeasurementByHour>> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false).sorted((o1, o2) -> {
-            int valComp = (o1.getValue()).compareTo(o2.getValue());
+            int valComp = Long.compare(o1.getValue().getMeasurement(), o2.getValue().getMeasurement());
             if (valComp != 0)
                 return -valComp;
-            return (o1.getKey()).toLowerCase().compareTo(((o2.getKey()).toLowerCase()));
+            return o1.getKey().toLowerCase().compareTo(o2.getKey().toLowerCase());
         }).collect(Collectors.toList());
     }
 }
